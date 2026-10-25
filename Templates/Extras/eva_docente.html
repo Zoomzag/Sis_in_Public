@@ -1,0 +1,770 @@
+{% extends 'Gestion_de_Alumnos/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+.dashboard-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 10px;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.module-icon {
+    color: #28a745;
+}
+
+.dashboard-header {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 1rem;
+}
+
+.section-title {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    border-radius: 20px;
+    padding: 0.375rem 1.5rem;
+}
+
+.btn-primary:hover {
+    background-color: #218838 !important;
+    border-color: #218838 !important;
+}
+
+/* Estilos para el formulario de evaluación */
+.evaluation-form {
+    background-color: #1a1d29;
+    border-radius: 10px;
+    padding: 2rem;
+}
+
+.evaluation-section {
+    margin-bottom: 2rem;
+    padding: 1.5rem;
+    background-color: #2a2e3f;
+    border-radius: 8px;
+    border-left: 4px solid #28a745;
+}
+
+.evaluation-section-title {
+    color: #ffffff;
+    font-weight: 600;
+    margin-bottom: 1.5rem;
+    font-size: 1.2rem;
+}
+
+.rating-scale {
+    display: flex;
+    justify-content: space-between;
+    margin-bottom: 1rem;
+}
+
+.rating-option {
+    text-align: center;
+    flex: 1;
+    padding: 0.5rem;
+}
+
+.rating-label {
+    display: block;
+    font-size: 0.9rem;
+    color: #ccc;
+    margin-bottom: 0.5rem;
+}
+
+.rating-value {
+    font-weight: bold;
+    color: #28a745;
+}
+
+.form-control, .form-select {
+    background-color: #2a2e3f;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #2a2e3f;
+    border-color: #28a745;
+    color: white;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.form-check-input:checked {
+    background-color: #28a745;
+    border-color: #28a745;
+}
+
+.star-rating {
+    display: flex;
+    gap: 0.5rem;
+    margin-bottom: 1rem;
+}
+
+.star {
+    font-size: 1.5rem;
+    color: #6c757d;
+    cursor: pointer;
+    transition: color 0.2s ease;
+}
+
+.star:hover,
+.star.active {
+    color: #ffc107;
+}
+
+.alert {
+    border-radius: 10px;
+}
+
+.progress {
+    height: 8px;
+    background-color: #2a2e3f;
+}
+
+.progress-bar {
+    background-color: #28a745;
+}
+</style>
+
+<main class="dashboard-container">
+    <header class="dashboard-header mb-4">
+        <h1 class="display-5 fw-bold">Sistema de Evaluación Docente</h1>
+        <p class="lead">Evaluación del desempeño docente del Tecnológico de Chihuahua 2</p>
+    </header>
+    
+    <div class="row">
+        <div class="col-lg-8 mx-auto">
+            <div class="evaluation-form">
+                <div class="alert alert-info mb-4">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Complete el siguiente formulario para evaluar el desempeño de su profesor. 
+                    Su evaluación es anónima y confidencial.
+                </div>
+                
+                <form id="formEvaluacionDocente">
+                    {% csrf_token %}
+                    
+                    <!-- Información básica -->
+                    <div class="evaluation-section">
+                        <h3 class="evaluation-section-title">
+                            <i class="bi bi-person-badge me-2"></i>Información General
+                        </h3>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Profesor a Evaluar *</label>
+                                <select class="form-select" id="selectProfesor" name="profesor" required>
+                                    <option value="">Seleccionar profesor...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Materia *</label>
+                                <select class="form-select" id="selectMateria" name="materia" required>
+                                    <option value="">Seleccionar materia...</option>
+                                </select>
+                            </div>
+                        </div>
+                        
+                        <div class="row">
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Grupo *</label>
+                                <select class="form-select" id="selectGrupo" name="grupo" required>
+                                    <option value="">Seleccionar grupo...</option>
+                                </select>
+                            </div>
+                            <div class="col-md-6 mb-3">
+                                <label class="form-label">Periodo Académico *</label>
+                                <select class="form-select" name="periodo" required>
+                                    <option value="2025-1">2025-1</option>
+                                    <option value="2024-2">2024-2</option>
+                                    <option value="2024-1">2024-1</option>
+                                </select>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Dominio de la materia -->
+                    <div class="evaluation-section">
+                        <h3 class="evaluation-section-title">
+                            <i class="bi bi-journal-bookmark me-2"></i>Dominio de la Materia
+                        </h3>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Conocimiento y dominio del contenido *</label>
+                            <div class="rating-scale">
+                                <div class="rating-option">
+                                    <span class="rating-label">Deficiente</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="dominio_contenido" value="1" required>
+                                        <span class="rating-value">1</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <span class="rating-label">Regular</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="dominio_contenido" value="2">
+                                        <span class="rating-value">2</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <span class="rating-label">Bueno</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="dominio_contenido" value="3">
+                                        <span class="rating-value">3</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <span class="rating-label">Muy Bueno</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="dominio_contenido" value="4">
+                                        <span class="rating-value">4</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <span class="rating-label">Excelente</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="dominio_contenido" value="5">
+                                        <span class="rating-value">5</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Actualización en su área de conocimiento *</label>
+                            <div class="rating-scale">
+                                <div class="rating-option">
+                                    <span class="rating-value">1</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="actualizacion" value="1" required>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <span class="rating-value">2</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="actualizacion" value="2">
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <span class="rating-value">3</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="actualizacion" value="3">
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <span class="rating-value">4</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="actualizacion" value="4">
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <span class="rating-value">5</span>
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="actualizacion" value="5">
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Habilidades de enseñanza -->
+                    <div class="evaluation-section">
+                        <h3 class="evaluation-section-title">
+                            <i class="bi bi-mortarboard me-2"></i>Habilidades de Enseñanza
+                        </h3>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Claridad al explicar los temas *</label>
+                            <div class="star-rating" id="ratingClaridad">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                            <input type="hidden" name="claridad_explicacion" id="inputClaridad" required>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Uso de materiales y recursos didácticos *</label>
+                            <div class="star-rating" id="ratingMateriales">
+                                <span class="star" data-value="1">★</span>
+                                <span class="star" data-value="2">★</span>
+                                <span class="star" data-value="3">★</span>
+                                <span class="star" data-value="4">★</span>
+                                <span class="star" data-value="5">★</span>
+                            </div>
+                            <input type="hidden" name="uso_materiales" id="inputMateriales" required>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Capacidad para motivar e interesar a los alumnos *</label>
+                            <div class="rating-scale">
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="motivacion" value="1" required>
+                                        <span class="rating-value">1</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="motivacion" value="2">
+                                        <span class="rating-value">2</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="motivacion" value="3">
+                                        <span class="rating-value">3</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="motivacion" value="4">
+                                        <span class="rating-value">4</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="motivacion" value="5">
+                                        <span class="rating-value">5</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Relación con estudiantes -->
+                    <div class="evaluation-section">
+                        <h3 class="evaluation-section-title">
+                            <i class="bi bi-people me-2"></i>Relación con Estudiantes
+                        </h3>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Disposición para atender dudas y consultas *</label>
+                            <div class="rating-scale">
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="atencion_dudas" value="1" required>
+                                        <span class="rating-value">1</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="atencion_dudas" value="2">
+                                        <span class="rating-value">2</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="atencion_dudas" value="3">
+                                        <span class="rating-value">3</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="atencion_dudas" value="4">
+                                        <span class="rating-value">4</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="atencion_dudas" value="5">
+                                        <span class="rating-value">5</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Respeto y trato hacia los estudiantes *</label>
+                            <div class="rating-scale">
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="respeto_estudiantes" value="1" required>
+                                        <span class="rating-value">1</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="respeto_estudiantes" value="2">
+                                        <span class="rating-value">2</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="respeto_estudiantes" value="3">
+                                        <span class="rating-value">3</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="respeto_estudiantes" value="4">
+                                        <span class="rating-value">4</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="respeto_estudiantes" value="5">
+                                        <span class="rating-value">5</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Evaluación y retroalimentación -->
+                    <div class="evaluation-section">
+                        <h3 class="evaluation-section-title">
+                            <i class="bi bi-clipboard-check me-2"></i>Evaluación y Retroalimentación
+                        </h3>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Claridad en los criterios de evaluación *</label>
+                            <div class="rating-scale">
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="criterios_evaluacion" value="1" required>
+                                        <span class="rating-value">1</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="criterios_evaluacion" value="2">
+                                        <span class="rating-value">2</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="criterios_evaluacion" value="3">
+                                        <span class="rating-value">3</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="criterios_evaluacion" value="4">
+                                        <span class="rating-value">4</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="criterios_evaluacion" value="5">
+                                        <span class="rating-value">5</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="mb-4">
+                            <label class="form-label">Retroalimentación proporcionada sobre el desempeño *</label>
+                            <div class="rating-scale">
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="retroalimentacion" value="1" required>
+                                        <span class="rating-value">1</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="retroalimentacion" value="2">
+                                        <span class="rating-value">2</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="retroalimentacion" value="3">
+                                        <span class="rating-value">3</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="retroalimentacion" value="4">
+                                        <span class="rating-value">4</span>
+                                    </div>
+                                </div>
+                                <div class="rating-option">
+                                    <div class="form-check">
+                                        <input class="form-check-input" type="radio" name="retroalimentacion" value="5">
+                                        <span class="rating-value">5</span>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <!-- Comentarios adicionales -->
+                    <div class="evaluation-section">
+                        <h3 class="evaluation-section-title">
+                            <i class="bi bi-chat-left-text me-2"></i>Comentarios Adicionales
+                        </h3>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Aspectos positivos del profesor</label>
+                            <textarea class="form-control" name="aspectos_positivos" rows="3" 
+                                      placeholder="Mencione los aspectos que más valora del profesor..."></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Sugerencias de mejora</label>
+                            <textarea class="form-control" name="sugerencias_mejora" rows="3" 
+                                      placeholder="¿Qué aspectos podrían mejorarse?..."></textarea>
+                        </div>
+                        
+                        <div class="mb-3">
+                            <label class="form-label">Comentarios generales</label>
+                            <textarea class="form-control" name="comentarios_generales" rows="3" 
+                                      placeholder="Otros comentarios que desee agregar..."></textarea>
+                        </div>
+                    </div>
+                    
+                    <!-- Confirmación y envío -->
+                    <div class="evaluation-section">
+                        <h3 class="evaluation-section-title">
+                            <i class="bi bi-send-check me-2"></i>Confirmación y Envío
+                        </h3>
+                        
+                        <div class="alert alert-warning">
+                            <i class="bi bi-exclamation-triangle me-2"></i>
+                            <strong>Importante:</strong> Una vez enviada la evaluación, no podrá ser modificada. 
+                            Asegúrese de que toda la información sea correcta.
+                        </div>
+                        
+                        <div class="form-check mb-4">
+                            <input class="form-check-input" type="checkbox" id="confirmacion" required>
+                            <label class="form-check-label" for="confirmacion">
+                                Confirmo que la información proporcionada es verídica y que esta evaluación es anónima
+                            </label>
+                        </div>
+                        
+                        <div class="d-grid gap-2 d-md-flex justify-content-md-end">
+                            <button type="button" class="btn btn-secondary me-md-2" onclick="limpiarFormulario()">
+                                <i class="bi bi-arrow-clockwise me-1"></i>Limpiar Formulario
+                            </button>
+                            <button type="submit" class="btn btn-primary">
+                                <i class="bi bi-send me-1"></i>Enviar Evaluación
+                            </button>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</main>
+
+<script>
+// JavaScript para la evaluación docente
+const API_BASE = '/api';
+
+// Función para cargar profesores
+async function cargarProfesores() {
+    try {
+        const response = await fetch(`${API_BASE}/profesores/`);
+        if (!response.ok) throw new Error('Error al cargar profesores');
+        
+        const profesores = await response.json();
+        const select = document.getElementById('selectProfesor');
+        
+        select.innerHTML = '<option value="">Seleccionar profesor...</option>';
+        profesores.forEach(profesor => {
+            const option = document.createElement('option');
+            option.value = profesor.id_profesor;
+            option.textContent = `${profesor.nombre} - ${profesor.departamento}`;
+            select.appendChild(option);
+        });
+        
+        return profesores;
+    } catch (error) {
+        console.error('Error cargando profesores:', error);
+        mostrarError('Error al cargar los profesores');
+        return [];
+    }
+}
+
+// Función para cargar materias
+async function cargarMaterias() {
+    try {
+        const response = await fetch(`${API_BASE}/materias/`);
+        if (!response.ok) throw new Error('Error al cargar materias');
+        
+        const materias = await response.json();
+        const select = document.getElementById('selectMateria');
+        
+        select.innerHTML = '<option value="">Seleccionar materia...</option>';
+        materias.forEach(materia => {
+            const option = document.createElement('option');
+            option.value = materia.id_materia;
+            option.textContent = `${materia.nombre} (${materia.clave})`;
+            select.appendChild(option);
+        });
+        
+        return materias;
+    } catch (error) {
+        console.error('Error cargando materias:', error);
+        mostrarError('Error al cargar las materias');
+        return [];
+    }
+}
+
+// Función para cargar grupos
+async function cargarGrupos() {
+    try {
+        const response = await fetch(`${API_BASE}/grupos/`);
+        if (!response.ok) throw new Error('Error al cargar grupos');
+        
+        const grupos = await response.json();
+        const select = document.getElementById('selectGrupo');
+        
+        select.innerHTML = '<option value="">Seleccionar grupo...</option>';
+        grupos.forEach(grupo => {
+            const option = document.createElement('option');
+            option.value = grupo.id_grupo;
+            option.textContent = `${grupo.nombre_grupo} - Semestre ${grupo.semestre}`;
+            select.appendChild(option);
+        });
+        
+        return grupos;
+    } catch (error) {
+        console.error('Error cargando grupos:', error);
+        mostrarError('Error al cargar los grupos');
+        return [];
+    }
+}
+
+// Sistema de calificación con estrellas
+function inicializarSistemaEstrellas() {
+    const starRatings = document.querySelectorAll('.star-rating');
+    
+    starRatings.forEach(ratingContainer => {
+        const stars = ratingContainer.querySelectorAll('.star');
+        const hiddenInput = document.getElementById(ratingContainer.id.replace('rating', 'input'));
+        
+        stars.forEach(star => {
+            star.addEventListener('click', function() {
+                const value = this.getAttribute('data-value');
+                
+                // Actualizar estrellas visualmente
+                stars.forEach((s, index) => {
+                    if (index < value) {
+                        s.classList.add('active');
+                    } else {
+                        s.classList.remove('active');
+                    }
+                });
+                
+                // Actualizar valor del campo oculto
+                hiddenInput.value = value;
+            });
+            
+            // Efecto hover
+            star.addEventListener('mouseover', function() {
+                const value = this.getAttribute('data-value');
+                stars.forEach((s, index) => {
+                    if (index < value) {
+                        s.style.color = '#ffc107';
+                    }
+                });
+            });
+            
+            star.addEventListener('mouseout', function() {
+                const currentValue = hiddenInput.value;
+                stars.forEach((s, index) => {
+                    if (!currentValue || index >= currentValue) {
+                        s.style.color = '';
+                    }
+                });
+            });
+        });
+    });
+}
+
+// Envío del formulario
+document.getElementById('formEvaluacionDocente').addEventListener('submit', async function(e) {
+    e.preventDefault();
+    
+    const formData = new FormData(this);
+    const data = Object.fromEntries(formData);
+    
+    // Validar que todos los campos requeridos estén completos
+    const requiredFields = this.querySelectorAll('[required]');
+    let isValid = true;
+    
+    requiredFields.forEach(field => {
+        if (!field.value) {
+            isValid = false;
+            field.classList.add('is-invalid');
+        } else {
+            field.classList.remove('is-invalid');
+        }
+    });
+    
+    if (!isValid) {
+        mostrarError('Por favor complete todos los campos requeridos');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/evaluacion-docente/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': data.csrfmiddlewaretoken
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            mostrarExito('Evaluación enviada exitosamente. ¡Gracias por su participación!');
+            this.reset();
+            // Limpiar estrellas
+            document.querySelectorAll('.star').forEach(star => {
+                star.classList.remove('active');
+            });
+        } else {
+            mostrarError(result.message);
+        }
+    } catch (error) {
+        mostrarError('Error de conexión: ' + error);
+    }
+});
+
+// Limpiar formulario
+function limpiarFormulario() {
+    if (confirm('¿Está seguro de que desea limpiar todo el formulario? Se perderán todos los datos ingresados.')) {
+        document.getElementById('formEvaluacionDocente').reset();
+        document.querySelectorAll('.star').forEach(star => {
+            star.classList.remove('active');
+        });
+        mostrarExito('Formulario limpiado correctamente');
+    }
+}
+
+// Funciones de utilidad
+function mostrarExito(mensaje) {
+    // Puedes usar Toast de Bootstrap o alert simple
+    alert('Éxito: ' + mensaje);
+}
+
+function mostrarError(mensaje) {
+    alert('Error: ' + mensaje);
+}
+
+// Inicialización cuando el documento está listo
+document.addEventListener('DOMContentLoaded', function() {
+    cargarProfesores();
+    cargarMaterias();
+    cargarGrupos();
+    inicializarSistemaEstrellas();
+});
+</script>
+
+{% endblock %}

@@ -1,0 +1,114 @@
+{% extends "Control_Admi_fina/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="module-content">
+    <h2 class="my-4">Control Administrativo y Financiero</h2>
+
+    <!-- Estadísticas rápidas -->
+    <div class="row mb-4">
+        <div class="col-md-3">
+            <div class="stats-card blue">
+                <i class="bi bi-people-fill"></i>
+                <div class="number">{{ total_alumnos }}</div>
+                <div>Total Alumnos</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card green">
+                <i class="bi bi-award"></i>
+                <div class="number">{{ total_becas }}</div>
+                <div>Becas Activas</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card orange">
+                <i class="bi bi-cash-stack"></i>
+                <div class="number">{{ total_pagos }}</div>
+                <div>Pagos Registrados</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card red">
+                <i class="bi bi-clock-history"></i>
+                <div class="number">{{ estados_pendientes }}</div>
+                <div>Cuentas Pendientes</div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row">
+        <!-- Cobro de Colegiaturas -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-primary text-white">
+                    <h5 class="mb-0">Cobro de Colegiaturas</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Gestión y control de pagos de colegiaturas.</p>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalColegiaturas">
+                            Gestionar Colegiaturas
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Becas -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-success text-white">
+                    <h5 class="mb-0">Becas</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Administración de programas de becas y apoyos económicos.</p>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalBecas">
+                            Gestionar Becas
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Control de Pagos -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-warning text-dark">
+                    <h5 class="mb-0">Control de Pagos</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Registro y seguimiento de todos los pagos realizados.</p>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#modalPagos">
+                            Control de Pagos
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <!-- Estados de Cuenta -->
+        <div class="col-md-6 mb-4">
+            <div class="card h-100">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Estados de Cuenta</h5>
+                </div>
+                <div class="card-body">
+                    <p class="card-text">Consulta y generación de estados de cuenta de alumnos.</p>
+                    <div class="d-grid gap-2">
+                        <button class="btn btn-outline-info" data-bs-toggle="modal" data-bs-target="#modalEstadosCuenta">
+                            Ver Estados de Cuenta
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Incluir modales -->
+{% include "Control_Admi_fina/modales_financieros.html" %}
+
+{% endblock %}

@@ -1,0 +1,92 @@
+{% extends "Administracion_academica/base.html" %}
+{% load static %}
+
+{% block content %}
+<main class="module-content">
+    <h2 class="my-4">Gestión de Planes y Programas de Estudio</h2>
+
+    <section class="card">
+        <header class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+            <h5 class="mb-0">Proceso de Gestión de Planes de Estudio</h5>
+            <a href="{% url 'agregar_carrera' %}" class="btn btn-sm btn-light">
+                <i class="bi bi-plus-circle"></i> Nuevo Plan
+            </a>
+        </header>
+        <article class="card-body">
+            <figure class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Entradas</th>
+                            <th>Salidas</th>
+                            <th>Justificación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for proceso in procesos %}
+                        <tr>
+                            <td>{{ proceso.entrada }}</td>
+                            <td>{{ proceso.salida }}</td>
+                            <td>{{ proceso.justificacion }}</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </figure>
+        </article>
+    </section>
+
+    <section class="row mt-4">
+        <article class="col-md-6">
+            <section class="card">
+                <header class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Planes de Estudio Registrados</h5>
+                </header>
+                <nav class="card-body">
+                    <ul class="list-group">
+                        {% for plan in planes %}
+                        <li>
+                            <a href="#" class="list-group-item list-group-item-action">
+                                <section class="d-flex w-100 justify-content-between">
+                                    <h6 class="mb-1">{{ plan.nombre }}</h6>
+                                    <span class="badge bg-{% if plan.vigente %}success{% else %}secondary{% endif %}">
+                                        {% if plan.vigente %}Vigente{% else %}Inactivo{% endif %}
+                                    </span>
+                                </section>
+                                <p class="mb-1">{{ plan.perfil_egreso|truncatewords:10 }}</p>
+                            </a>
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item">
+                            No hay planes de estudio registrados.
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </nav>
+            </section>
+        </article>
+
+        <article class="col-md-6">
+            <section class="card">
+                <header class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Mapas Curriculares</h5>
+                </header>
+                <article class="card-body">
+                    <p>Visualización de mallas curriculares por plan de estudios</p>
+                    <section class="d-grid gap-2">
+                        {% for plan in planes %}
+                        <button class="btn btn-outline-primary">
+                            <i class="bi bi-diagram-3"></i> Ver Mapa de {{ plan.nombre }}
+                        </button>
+                        {% empty %}
+                        <button class="btn btn-outline-secondary" disabled>
+                            <i class="bi bi-diagram-3"></i> No hay planes disponibles
+                        </button>
+                        {% endfor %}
+                    </section>
+                </article>
+            </section>
+        </article>
+    </section>
+</main>
+{% endblock %}

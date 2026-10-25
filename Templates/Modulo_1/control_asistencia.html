@@ -1,0 +1,175 @@
+{% extends "Administracion_academica/base.html" %}
+{% load static %}
+
+{% block content %}
+<main class="module-content">
+    <header>
+        <h2 class="my-4">Control de Asistencia</h2>
+    </header>
+
+    <section class="card">
+        <header class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+            <h5 class="mb-0">Proceso de Control de Asistencia</h5>
+            <a href="{% url 'agregar_asistencia' %}" class="btn btn-sm btn-light">
+                <i class="bi bi-plus-circle"></i> Nuevo Registro
+            </a>
+        </header>
+        <article class="card-body">
+            <figure class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Entradas</th>
+                            <th>Salidas</th>
+                            <th>Justificación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Registro de asistencia por clase</td>
+                            <td>Reporte de asistencia por alumno</td>
+                            <td>Se genera un informe que registra la asistencia individual de cada alumno</td>
+                        </tr>
+                        <tr>
+                            <td>Justificantes</td>
+                            <td>Bitácora de asistencias</td>
+                            <td>Se genera un registro de cada clase a la que asistió o no, un alumno</td>
+                        </tr>
+                        <tr>
+                            <td>Reglas de faltas</td>
+                            <td>Alertas por inasistencias</td>
+                            <td>Se tienen notificaciones al haber asistencias bajas, para llamar la atención a los
+                                alumnos</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </figure>
+        </article>
+    </section>
+
+    <section class="row mt-4">
+        <article class="col-md-6">
+            <section class="card">
+                <header class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Registro de Asistencia</h5>
+                </header>
+                <form class="card-body">
+                    <div class="mb-3">
+                        <label for="fechaInput" class="form-label">Fecha</label>
+                        <input type="date" class="form-control" id="fechaInput">
+                    </div>
+                    <div class="mb-3">
+                        <label for="grupoSelect" class="form-label">Grupo</label>
+                        <select class="form-select" id="grupoSelect">
+                            <option selected>Seleccione un grupo</option>
+                            {% for grupo in grupos %}
+                            <option value="{{ grupo.id_grupo }}">{{ grupo.nombre_grupo }} - {{ grupo.id_carrera.nombre
+                                }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <div class="mb-3">
+                        <label for="asignaturaSelect" class="form-label">Asignatura</label>
+                        <select class="form-select" id="asignaturaSelect">
+                            <option selected>Seleccione una asignatura</option>
+                            {% for asignatura in asignaturas %}
+                            <option value="{{ asignatura.id_asignatura }}">{{ asignatura.nombre }} - {{
+                                asignatura.id_carrera.nombre }}</option>
+                            {% endfor %}
+                        </select>
+                    </div>
+                    <button type="submit" class="btn btn-primary">Cargar Estudiantes</button>
+                </form>
+            </section>
+        </article>
+
+        <article class="col-md-6">
+            <section class="card">
+                <header class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Alertas por Inasistencias</h5>
+                </header>
+                <section class="card-body">
+                    <nav class="list-group">
+                        {% for alerta in alertas_inasistencia %}
+                        <a href="#" class="list-group-item list-group-item-action list-group-item-danger">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ alerta.id_alumno.nombre }}</h6>
+                                <small>{{ alerta.tipo }}</small>
+                            </div>
+                            <p class="mb-1">Grupo: {{ alerta.id_alumno.id_grupo.nombre_grupo }}</p>
+                            <small>{{ alerta.mensaje }}</small>
+                        </a>
+                        {% empty %}
+                        <div class="list-group-item">
+                            No hay alertas por inasistencias.
+                        </div>
+                        {% endfor %}
+                    </nav>
+                </section>
+            </section>
+        </article>
+    </section>
+
+    <!-- Asistencias recientes -->
+    <section class="card mt-4">
+        <header class="card-header bg-light">
+            <h5 class="mb-0">Registros de Asistencia Recientes</h5>
+        </header>
+        <article class="card-body">
+            <figure class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Estudiante</th>
+                            <th>Fecha</th>
+                            <th>Asistencia</th>
+                            <th>Justificante</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for asistencia in asistencias_recientes %}
+                        <tr>
+                            <td>{{ asistencia.id_alumno.nombre }}</td>
+                            <td>{{ asistencia.fecha }}</td>
+                            <td>
+                                <span class="badge bg-{% if asistencia.presente %}success{% else %}danger{% endif %}">
+                                    {% if asistencia.presente %}Presente{% else %}Ausente{% endif %}
+                                </span>
+                            </td>
+                            <td>{{ asistencia.justificante|truncatewords:3|default:"Sin justificante" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="4" class="text-center">No hay registros de asistencia.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </figure>
+        </article>
+    </section>
+
+    <!-- Estadísticas de asistencia -->
+    <section class="card mt-4">
+        <header class="card-header bg-info text-white">
+            <h5 class="mb-0">Estadísticas de Asistencia</h5>
+        </header>
+        <article class="card-body">
+            <section class="row text-center">
+                <article class="col-md-4">
+                    <h3>{{ porcentaje_asistencia }}%</h3>
+                    <p>Porcentaje global de asistencia</p>
+                </article>
+                <article class="col-md-4">
+                    <h3>{{ asistencias_recientes|length }}</h3>
+                    <p>Registros recientes</p>
+                </article>
+                <article class="col-md-4">
+                    <h3>{{ alertas_inasistencia|length }}</h3>
+                    <p>Alertas activas</p>
+                </article>
+            </section>
+        </article>
+    </section>
+</main>
+{% endblock %}

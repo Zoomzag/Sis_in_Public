@@ -1,0 +1,241 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Estadísticas de Egresos - Reportes y Estadísticas</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.10.0/font/bootstrap-icons.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css">
+    <style>
+        .stats-card {
+            transition: transform 0.3s;
+        }
+        .stats-card:hover {
+            transform: translateY(-5px);
+        }
+    </style>
+</head>
+<body>
+    <!-- Header -->
+    <iframe src="/header.html" style="width: 100%; border: none; height: 150px;"></iframe>
+
+    <div class="container-fluid mt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-2">
+                <div class="sidebar">
+                    <nav class="nav flex-column">
+                        <a class="nav-link" href="index.html">
+                            <i class="bi bi-speedometer2"></i> Dashboard
+                        </a>
+                        <a class="nav-link" href="desempenio.html">
+                            <i class="bi bi-graph-up"></i> Desempeño Académico
+                        </a>
+                        <a class="nav-link" href="asistencia.html">
+                            <i class="bi bi-person-check"></i> Estadísticas de Asistencia
+                        </a>
+                        <a class="nav-link" href="bajas.html">
+                            <i class="bi bi-exclamation-triangle"></i> Reportes de Bajas
+                        </a>
+                        <a class="nav-link active" href="egresos.html">
+                            <i class="bi bi-mortarboard"></i> Estadísticas de Egresos
+                        </a>
+                        <a class="nav-link" href="cambios.html">
+                            <i class="bi bi-arrow-left-right"></i> Reportes de Cambios
+                        </a>
+                    </nav>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-10">
+                <div class="main-content">
+                    <h2 class="module-title mb-4">
+                        <i class="bi bi-mortarboard"></i> Estadísticas de Egresos
+                    </h2>
+
+                    <!-- Tarjetas de Estadísticas Rápidas -->
+                    <div class="row mb-4">
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card stats-card bg-success text-white">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="card-title">Eficiencia Terminal</h6>
+                                            <h2 class="mb-0">72.3%</h2>
+                                        </div>
+                                        <i class="bi bi-award-fill fa-2x opacity-50"></i>
+                                    </div>
+                                    <p class="small mt-2 mb-0">Promedio general</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card stats-card bg-primary text-white">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="card-title">Tasa de Titulación</h6>
+                                            <h2 class="mb-0">86.5%</h2>
+                                        </div>
+                                        <i class="bi bi-file-earmark-text-fill fa-2x opacity-50"></i>
+                                    </div>
+                                    <p class="small mt-2 mb-0">Porcentaje de titulados</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card stats-card bg-info text-white">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="card-title">Tiempo Promedio</h6>
+                                            <h2 class="mb-0">8.2</h2>
+                                        </div>
+                                        <i class="bi bi-clock-fill fa-2x opacity-50"></i>
+                                    </div>
+                                    <p class="small mt-2 mb-0">Semestres para egresar</p>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="col-xl-3 col-md-6 mb-3">
+                            <div class="card stats-card bg-warning text-dark">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between">
+                                        <div>
+                                            <h6 class="card-title">Egresados 2023</h6>
+                                            <h2 class="mb-0">142</h2>
+                                        </div>
+                                        <i class="bi bi-people-fill fa-2x opacity-50"></i>
+                                    </div>
+                                    <p class="small mt-2 mb-0">Total de egresados</p>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Tabla de Egresos por Carrera -->
+                    <div class="card mb-4">
+                        <div class="card-header d-flex justify-content-between align-items-center">
+                            <h5 class="mb-0">
+                                <i class="bi bi-table me-2"></i>Estadísticas de Egresos por Carrera
+                            </h5>
+                            <div>
+                                <button class="btn btn-sm btn-outline-primary me-2">
+                                    <i class="bi bi-file-pdf me-1"></i>Exportar PDF
+                                </button>
+                                <button class="btn btn-sm btn-outline-success">
+                                    <i class="bi bi-file-excel me-1"></i>Exportar Excel
+                                </button>
+                            </div>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-hover">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Carrera</th>
+                                            <th>Egresados</th>
+                                            <th>Eficiencia Terminal</th>
+                                            <th>Tasa de Titulación</th>
+                                            <th>Tiempo Promedio</th>
+                                            <th>Promedio de Egreso</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Ingeniería en Sistemas</td>
+                                            <td>45</td>
+                                            <td>78.5%</td>
+                                            <td>92.3%</td>
+                                            <td>8.5 semestres</td>
+                                            <td>88.7</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ingeniería Industrial</td>
+                                            <td>32</td>
+                                            <td>71.2%</td>
+                                            <td>85.4%</td>
+                                            <td>8.1 semestres</td>
+                                            <td>86.2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Ing. en Gestión Empresarial</td>
+                                            <td>28</td>
+                                            <td>68.9%</td>
+                                            <td>82.7%</td>
+                                            <td>7.8 semestres</td>
+                                            <td>87.1</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Lic. en Administración</td>
+                                            <td>37</td>
+                                            <td>70.5%</td>
+                                            <td>83.9%</td>
+                                            <td>8.3 semestres</td>
+                                            <td>85.8</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+                    <!-- Métodos de Titulación -->
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">
+                                <i class="bi bi-clipboard-data me-2"></i>Métodos de Titulación
+                            </h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-sm">
+                                    <thead class="table-light">
+                                        <tr>
+                                            <th>Método</th>
+                                            <th>Porcentaje</th>
+                                            <th>Promedio</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>Tesis</td>
+                                            <td>45%</td>
+                                            <td>89.2</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Examen General</td>
+                                            <td>32%</td>
+                                            <td>86.7</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Experiencia Profesional</td>
+                                            <td>15%</td>
+                                            <td>87.5</td>
+                                        </tr>
+                                        <tr>
+                                            <td>Estudios de Posgrado</td>
+                                            <td>8%</td>
+                                            <td>91.3</td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <div class="alert alert-info mt-3">
+                                <i class="bi bi-info-circle me-2"></i>
+                                <strong>Análisis:</strong> El 77% de los egresados se titula mediante Tesis o Examen General. 
+                                Los estudiantes que eligen Estudios de Posgrado obtienen los promedios más altos.
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

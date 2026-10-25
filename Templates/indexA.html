@@ -1,0 +1,416 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TECNM Campus Chihuahua II</title>
+    <link rel="icon" type="image/png" href="{% static 'images/LOGO TEC2 RED.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-FKyoEForCGlyvwx9Hj09JcYn3nv7wiPVlz7YYwJrWVcXK/BmnVDxM+D2scQbITxI"
+        crossorigin="anonymous"></script>
+    <link rel="stylesheet" href="{% static 'css/style.css' %}">
+    <style>
+        /* ====== GRID RESPONSIVO ====== */
+        .parent {
+            display: grid;
+            gap: 30px;
+            justify-content: center;
+            align-items: start;
+            padding: 20px;
+            grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+        }
+
+        .parent>div {
+            display: flex;
+            justify-content: center;
+        }
+
+        /* ==== TARJETAS ==== */
+        .card {
+            background-color: #1a1d29 !important;
+            color: white !important;
+            border-radius: 10px !important;
+            border: none;
+            box-shadow: 0 4px 10px rgba(0, 0, 0, 0.2);
+            transition: transform 0.3s ease, box-shadow 0.3s ease;
+        }
+
+        .card:hover {
+            transform: translateY(-5px);
+            box-shadow: 0 6px 16px rgba(0, 0, 0, 0.3);
+        }
+
+        .card .btn {
+            border-radius: 20px !important;
+            background-color: #28a745 !important;
+            border: none;
+            transition: background-color 0.3s ease;
+        }
+
+        .card .btn:hover {
+            background-color: #218838 !important;
+        }
+
+        .card-img-top {
+            width: 100%;
+            height: 180px;
+            object-fit: cover;
+            border-top-left-radius: 10px;
+            border-top-right-radius: 10px;
+        }
+
+        .compact-table {
+            border-collapse: separate !important;
+            border-spacing: 0;
+            border-radius: 0;
+            background-color: #1a1d29;
+            color: white;
+            width: 100%;
+            font-size: 0.9rem;
+        }
+
+        .compact-table thead th {
+            background-color: #2a2e3f;
+            color: #ffffff;
+            border: none;
+            padding: 10px 12px;
+            font-weight: 600;
+            font-size: 0.85rem;
+        }
+
+        .compact-table tbody td {
+            border-top: 1px solid rgba(255, 255, 255, 0.1);
+            padding: 8px 12px;
+        }
+
+        .compact-table tbody tr:hover {
+            background-color: rgba(255, 255, 255, 0.1);
+        }
+
+        .compact-table tbody tr:nth-of-type(odd) {
+            background-color: rgba(255, 255, 255, 0.05);
+        }
+    </style>
+</head>
+
+<body>
+    <header>
+        <nav class="navbar navbar-expand-lg navbar-custom">
+            <div class="container-fluid">
+                <a class="navbar-brand" href="{% url 'indexA' %}">Instituto tecnológico de chihuahua II</a>
+                <button class="navbar-toggler" type="button" data-bs-toggle="collapse"
+                    data-bs-target="#navbarNavAltMarkup" aria-controls="navbarNavAltMarkup" aria-expanded="false"
+                    aria-label="Toggle navigation">
+                    <span class="navbar-toggler-icon"></span>
+                </button>
+
+                <div>
+                    <ul class="nav justify-content-end">
+                        <li class="nav-item">
+                            <a class="nav-link active" aria-current="page" href="{% url 'dashboard' %}">Actividad</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Cuenta</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">Ayuda</a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="{% url 'logout' %}">Cerrar sesión</a>
+                        </li>
+                    </ul>
+                </div>
+            </div>
+        </nav>
+
+        <nav class="container-fluid bg-light py-2 shadow-sm" aria-label="Main navigation">
+            <section class="row justify-content-center">
+                <article class="col-12">
+                    <ul class="nav nav-pills justify-content-center">
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_page == 'dashboard_alumnos' %}active{% endif %}"
+                                href="{% url 'dashboard2'%}">
+                                <i class="bi bi-journal-bookmark me-1"></i> Gestion de Alumnos
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_page == 'act_extra' %}active{% endif %}"
+                                href="{% url 'act_extra' %}">
+                                <i class="bi bi-calendar-week me-1"></i> Actividades complementarias
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_page == 'tramites' %}active{% endif %}"
+                                href="{% url 'tramites' %}">
+                                <i class="bi bi-clipboard-data me-1"></i>Tramites 
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_page == 'eva_docente' %}active{% endif %}"
+                                href="{% url 'eva_docente' %}">
+                                <i class="bi bi-person-check me-1"></i> Evaluación docente
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link {% if active_page == 'financiero' %}active{% endif %}"
+                                href="{% url 'control_financiero' %}">
+                                <i class="bi bi-cash-coin me-1"></i> Control Financiero
+                            </a>
+                        </li>
+                          <li class="nav-item">
+                            <a class="nav-link {% if active_page == 'biblioteca' %}active{% endif %}"
+                                href="{% url 'biblioteca' %}">
+                                <i class="fas fa-book me-1"></i> Biblioteca
+                            </a>
+                        </li>
+                    </ul>
+                </article>
+            </section>
+        </nav>
+    </header>
+
+    <br><br><br>
+
+    <section class="parent">
+        <div>
+            <div class="card" style="width: 18rem;">
+                <img src="{% static 'images/ima_mod2/ima1.jpg' %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Correo institucional</h5>
+                    <p class="card-text">Recuerda tu correo institucional dando click en el botón.</p>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal3">
+                        Recuerda tu correo
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="card" style="width: 18rem;">
+                <img src="{% static 'images/ima_mod2/ima2.jpg' %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Correos de tus profesores</h5>
+                    <p class="card-text">Consulta los Correos de tus profesores dando click en el botón.</p>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal2">
+                        Correo de tus profesores
+                    </button>
+
+
+                </div>
+            </div>
+        </div>
+
+        <div>
+            <div class="card" style="width: 18rem;">
+                <img src="{% static 'images/ima_mod2/ima4.jpg' %}" class="card-img-top" alt="...">
+                <div class="card-body">
+                    <h5 class="card-title">Teams y Moodle</h5>
+                    <p class="card-text">Información relevante de la plataforma Teams y Moodle.</p>
+                    <button class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#exampleModal">
+                        Ver información
+                    </button>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== SECCIÓN COMUNICACIÓN ESCOLAR ====== -->
+    <section class="container mt-5">
+        <div class="row">
+            <div class="col-12">
+                <h2 class="text-center mb-4" style="color: #1a1d29;">Comunicación Escolar</h2>
+            </div>
+        </div>
+        
+        <div class="row justify-content-center">
+            <!-- Mensajería entre docentes y alumnos -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-header bg-primary text-white">
+                        <i class="bi bi-chat-dots fs-1"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Mensajería</h5>
+                        <p class="card-text">Comunicación directa entre docentes y alumnos para resolver dudas y coordinar actividades académicas.</p>
+                        <button class="btn btn-outline-primary" data-bs-toggle="modal" data-bs-target="#modalMensajeria">
+                            Acceder a Mensajería
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Publicación de avisos y circulares -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-header bg-success text-white">
+                        <i class="bi bi-megaphone fs-1"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Avisos y Circulares</h5>
+                        <p class="card-text">Publicación de anuncios importantes, circulares y comunicados institucionales para toda la comunidad.</p>
+                        <button class="btn btn-outline-success" data-bs-toggle="modal" data-bs-target="#modalAvisos">
+                            Ver Avisos
+                        </button>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Calendario escolar digital -->
+            <div class="col-md-4 mb-4">
+                <div class="card h-100 text-center">
+                    <div class="card-header bg-warning text-dark">
+                        <i class="bi bi-calendar-event fs-1"></i>
+                    </div>
+                    <div class="card-body">
+                        <h5 class="card-title">Calendario Escolar</h5>
+                        <p class="card-text">Consulta el calendario académico con fechas importantes, eventos y actividades programadas.</p>
+                        <button class="btn btn-outline-warning" data-bs-toggle="modal" data-bs-target="#modalCalendario">
+                            Ver Calendario
+                        </button>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- ====== MODALES EXISTENTES ====== -->
+    <div class="modal fade" id="exampleModal" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="exampleModalLabel">Teams y Moodle</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        informacion relevante sobre la plataforma Microsoft Teams y Moodle, que son herramientas
+                        esenciales para la comunicación y gestión académica en el instituto.
+                    </p>
+
+                    <p>
+                        plataforma Microsoft Teams: <a href="https://teams.microsoft.com/v2/" target="_blank"
+                            rel="noopener noreferrer">Teams</a>
+                    </p>
+                    <p>
+                        plataforma Moodle: <a href="https://moodle.chihuahua2.tecnm.mx/login/index.php" target="_blank"
+                            rel="noopener noreferrer">Moodle</a>
+                    </p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal2" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="exampleModalLabel">Correos de tus profesores</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        recuerda que puedes contactar a tus profesores a través de sus correos institucionales para
+                        resolver dudas o recibir apoyo académico.
+                    </p>
+                    <img src="{%static 'images/ima_mod2/profes.png'%}" alt="">
+                    <p>
+
+                    </p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="exampleModal3" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content bg-dark text-white">
+                <div class="modal-header border-0">
+                    <h5 class="modal-title" id="exampleModalLabel">Correo institucional</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                        aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>
+                        Tu correo institucional es: l21550342@chihuahua2.tecnm.mx
+
+                    </p>
+                    <p>
+                        tu correo institucional es importante para acceder a diversas plataformas y servicios del
+                        instituto.
+                        Asegúrate de recordarlo y utilizarlo correctamente.
+                    </p>
+                </div>
+                <div class="modal-footer border-0">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- ====== MODALES COMUNICACIÓN ESCOLAR ====== -->
+    <div class="modal fade" id="modalMensajeria" tabindex="-1" aria-labelledby="modalMensajeriaLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalMensajeriaLabel">Sistema de Mensajería</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Plataforma de comunicación interna entre docentes y alumnos.</p>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> Esta funcionalidad estará disponible próximamente.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalAvisos" tabindex="-1" aria-labelledby="modalAvisosLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalAvisosLabel">Avisos y Circulares</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Consulta los últimos avisos y comunicados institucionales.</p>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> Sistema de avisos en desarrollo.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="modal fade" id="modalCalendario" tabindex="-1" aria-labelledby="modalCalendarioLabel" aria-hidden="true">
+        <div class="modal-dialog modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="modalCalendarioLabel">Calendario Escolar</h5>
+                    <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    <p>Calendario académico con eventos y fechas importantes.</p>
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle"></i> Calendario digital en implementación.
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+</body>
+
+</html>

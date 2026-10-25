@@ -1,0 +1,643 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sistema de Gestión de Docentes - TecNM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link rel="stylesheet" href="/styles.css">
+  
+</head>
+<body>
+    <!-- Header TecNM -->
+<header>
+    <script>
+        fetch("sidebar.html")
+        .then(res => res.text())
+        .then(data => {
+            document.getElementById("incluir").innerHTML = data;
+        })
+    </script>
+</header>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <i class="fas fa-home me-1"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-info-circle me-1"></i> Acerca del Sistema
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-question-circle me-1"></i> Ayuda
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> Admin. Departamento
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Configuración</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-bell me-2"></i>Notificaciones</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3 col-md-4 mb-4">
+                <div class="sidebar rounded">
+                    <nav class="nav flex-column">
+                        <a class="nav-link active" href="#asignacion">
+                            <i class="fas fa-users"></i> Asignación de Grupos
+                        </a>
+                        <a class="nav-link" href="#asistencias">
+                            <i class="fas fa-calendar-check"></i> Control de Asistencias
+                        </a>
+                        <a class="nav-link" href="#cargas">
+                            <i class="fas fa-clock"></i> Cargas Horarias
+                        </a>
+                        <a class="nav-link" href="#evaluacion">
+                            <i class="fas fa-chart-line"></i> Evaluación de Desempeño
+                        </a>
+                        <a class="nav-link" href="#reportes">
+                            <i class="fas fa-file-alt"></i> Reportes
+                        </a>
+                        <a class="nav-link" href="#configuracion">
+                            <i class="fas fa-cog"></i> Configuración
+                        </a>
+                    </nav>
+                    
+                    <div class="mt-4 p-3">
+                        <h6 class="text-white">Accesos Rápidos</h6>
+                        <div class="d-grid gap-2">
+                            <button class="btn btn-sm btn-outline-tecnm">
+                                <i class="fas fa-plus"></i> Nuevo Docente
+                            </button>
+                            <button class="btn btn-sm btn-outline-tecnm">
+                                <i class="fas fa-file-export"></i> Exportar Datos
+                            </button>
+                            <button class="btn btn-sm btn-outline-tecnm">
+                                <i class="fas fa-print"></i> Imprimir Reportes
+                            </button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9 col-md-8">
+                <!-- Dashboard Stats -->
+                <div class="row mb-4">
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="stat-number">42</div>
+                                <div class="stat-label">Docentes Activos</div>
+                                <div class="progress mt-2" style="height: 5px;">
+                                    <div class="progress-bar" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="stat-number">18</div>
+                                <div class="stat-label">Grupos Asignados</div>
+                                <div class="progress mt-2" style="height: 5px;">
+                                    <div class="progress-bar" style="width: 60%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="stat-number">96%</div>
+                                <div class="stat-label">Asistencia Promedio</div>
+                                <div class="progress mt-2" style="height: 5px;">
+                                    <div class="progress-bar bg-success" style="width: 96%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="stat-number">4.2</div>
+                                <div class="stat-label">Evaluación Promedio</div>
+                                <div class="progress mt-2" style="height: 5px;">
+                                    <div class="progress-bar bg-warning" style="width: 84%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Asignación de Grupos y Materias -->
+                <div class="main-content mb-4" id="asignacion">
+                    <h3 class="section-title">
+                        <i class="fas fa-users me-2"></i>Asignación de Grupos y Materias
+                    </h3>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Asignar Materia a Docente</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="docente" class="form-label">Seleccionar Docente</label>
+                                            <select class="form-select" id="docente">
+                                                <option selected>Seleccione un docente...</option>
+                                                <option>Ing. Carlos Rodríguez Hernández</option>
+                                                <option>Dra. María González López</option>
+                                                <option>Mtro. Jorge Pérez Martínez</option>
+                                                <option>Mtra. Ana Sánchez Ramírez</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="carrera" class="form-label">Carrera</label>
+                                            <select class="form-select" id="carrera">
+                                                <option selected>Seleccione una carrera...</option>
+                                                <option>Ingeniería en Sistemas Computacionales</option>
+                                                <option>Ingeniería Industrial</option>
+                                                <option>Ingeniería en Gestión Empresarial</option>
+                                                <option>Licenciatura en Administración</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="materia" class="form-label">Seleccionar Materia</label>
+                                            <select class="form-select" id="materia">
+                                                <option selected>Seleccione una materia...</option>
+                                                <option>Programación Web</option>
+                                                <option>Base de Datos</option>
+                                                <option>Cálculo Diferencial</option>
+                                                <option>Química General</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="grupo" class="form-label">Seleccionar Grupo</label>
+                                            <select class="form-select" id="grupo">
+                                                <option selected>Seleccione un grupo...</option>
+                                                <option>A</option>
+                                                <option>B</option>
+                                                <option>C</option>
+                                                <option>A</option>
+                                            </select>
+                                        </div>
+                                        <div class="mb-3">
+                                            <label for="horas" class="form-label">Horas Semanales</label>
+                                            <input type="number" class="form-control" id="horas" min="1" max="40">
+                                        </div>
+                                        <button type="submit" class="btn btn-tecnm w-100">
+                                            <i class="fas fa-save me-2"></i>Guardar Asignación
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Asignaciones Actuales</h5>
+                                    <button class="btn btn-sm btn-outline-tecnm">
+                                        <i class="fas fa-sync"></i>
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Docente</th>
+                                                    <th>Materia</th>
+                                                    <th>Grupo</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Ing. Rodríguez</td>
+                                                    <td>Programación Web</td>
+                                                    <td>A</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-tecnm">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-outline-danger">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Dra. González</td>
+                                                    <td>Base de Datos</td>
+                                                    <td>B</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-tecnm">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-outline-danger">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mtro. Pérez</td>
+                                                    <td>Cálculo Diferencial</td>
+                                                    <td>C</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-outline-tecnm">
+                                                            <i class="fas fa-edit"></i>
+                                                        </button>
+                                                        <button class="btn btn-sm btn-outline-danger">
+                                                            <i class="fas fa-trash"></i>
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Control de Asistencias y Cargas Horarias -->
+                <div class="main-content mb-4" id="asistencias">
+                    <h3 class="section-title">
+                        <i class="fas fa-calendar-check me-2"></i>Control de Asistencias y Cargas Horarias
+                    </h3>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Registro de Asistencias</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between mb-3">
+                                        <div>
+                                            <label for="fecha" class="form-label">Fecha:</label>
+                                            <input type="date" class="form-control" id="fecha" value="2023-05-24">
+                                        </div>
+                                        <div>
+                                            <label for="filtroDocente" class="form-label">Filtrar por Docente:</label>
+                                            <select class="form-select" id="filtroDocente">
+                                                <option selected>Todos los docentes</option>
+                                                <option>Ing. Carlos Rodríguez Hernández</option>
+                                                <option>Dra. María González López</option>
+                                            </select>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="table-responsive">
+                                        <table class="table table-bordered attendance-table">
+                                            <thead>
+                                                <tr>
+                                                    <th>Docente</th>
+                                                    <th>Materia</th>
+                                                    <th>Hora Programada</th>
+                                                    <th>Asistencia</th>
+                                                    <th>Horas Impartidas</th>
+                                                    <th>Acciones</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Ing. Rodríguez</td>
+                                                    <td>Programación Web</td>
+                                                    <td>07:00 - 09:00</td>
+                                                    <td>
+                                                        <span class="badge bg-success">Presente</span>
+                                                    </td>
+                                                    <td>2 horas</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-tecnm">
+                                                            <i class="fas fa-edit"></i> Editar
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Dra. González</td>
+                                                    <td>Base de Datos</td>
+                                                    <td>09:00 - 11:00</td>
+                                                    <td>
+                                                        <span class="badge bg-warning text-dark">Retardo</span>
+                                                    </td>
+                                                    <td>1.5 horas</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-tecnm">
+                                                            <i class="fas fa-edit"></i> Editar
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mtro. Pérez</td>
+                                                    <td>Cálculo Diferencial</td>
+                                                    <td>11:00 - 13:00</td>
+                                                    <td>
+                                                        <span class="badge bg-danger">Ausente</span>
+                                                    </td>
+                                                    <td>0 horas</td>
+                                                    <td>
+                                                        <button class="btn btn-sm btn-tecnm">
+                                                            <i class="fas fa-edit"></i> Editar
+                                                        </button>
+                                                    </td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Resumen de Cargas Horarias</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="mb-4">
+                                        <h6>Ing. Carlos Rodríguez Hernández</h6>
+                                        <div class="d-flex justify-content-between">
+                                            <span>Horas asignadas:</span>
+                                            <strong>25/40 horas</strong>
+                                        </div>
+                                        <div class="progress mt-2">
+                                            <div class="progress-bar" role="progressbar" style="width: 62.5%;" aria-valuenow="62.5" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h6>Dra. María González López</h6>
+                                        <div class="d-flex justify-content-between">
+                                            <span>Horas asignadas:</span>
+                                            <strong>30/40 horas</strong>
+                                        </div>
+                                        <div class="progress mt-2">
+                                            <div class="progress-bar" role="progressbar" style="width: 75%;" aria-valuenow="75" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="mb-4">
+                                        <h6>Mtro. Jorge Pérez Martínez</h6>
+                                        <div class="d-flex justify-content-between">
+                                            <span>Horas asignadas:</span>
+                                            <strong>35/40 horas</strong>
+                                        </div>
+                                        <div class="progress mt-2">
+                                            <div class="progress-bar bg-warning" role="progressbar" style="width: 87.5%;" aria-valuenow="87.5" aria-valuemin="0" aria-valuemax="100"></div>
+                                        </div>
+                                    </div>
+                                    
+                                    <div class="text-center mt-4">
+                                        <button class="btn btn-tecnm">
+                                            <i class="fas fa-file-pdf me-2"></i>Generar Reporte
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Evaluación del Desempeño Docente -->
+                <div class="main-content mb-4" id="evaluacion">
+                    <h3 class="section-title">
+                        <i class="fas fa-chart-line me-2"></i>Evaluación del Desempeño Docente
+                    </h3>
+                    
+                    <div class="row">
+                        <div class="col-md-5">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Evaluar Desempeño</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="docenteEvaluacion" class="form-label">Docente a Evaluar</label>
+                                            <select class="form-select" id="docenteEvaluacion">
+                                                <option selected>Seleccione un docente...</option>
+                                                <option>Ing. Carlos Rodríguez Hernández</option>
+                                                <option>Dra. María González López</option>
+                                                <option>Mtro. Jorge Pérez Martínez</option>
+                                            </select>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Planificación de Clases (1-5)</label>
+                                            <input type="range" class="form-range" min="1" max="5" step="1" id="planificacion">
+                                            <div class="d-flex justify-content-between">
+                                                <small>1 (Deficiente)</small>
+                                                <small>3 (Adecuado)</small>
+                                                <small>5 (Excelente)</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Dominio de Materia (1-5)</label>
+                                            <input type="range" class="form-range" min="1" max="5" step="1" id="dominio">
+                                            <div class="d-flex justify-content-between">
+                                                <small>1 (Deficiente)</small>
+                                                <small>3 (Adecuado)</small>
+                                                <small>5 (Excelente)</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Comunicación (1-5)</label>
+                                            <input type="range" class="form-range" min="1" max="5" step="1" id="comunicacion">
+                                            <div class="d-flex justify-content-between">
+                                                <small>1 (Deficiente)</small>
+                                                <small>3 (Adecuado)</small>
+                                                <small>5 (Excelente)</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Evaluación de Estudiantes (1-5)</label>
+                                            <input type="range" class="form-range" min="1" max="5" step="1" id="evaluacionEst">
+                                            <div class="d-flex justify-content-between">
+                                                <small>1 (Deficiente)</small>
+                                                <small>3 (Adecuado)</small>
+                                                <small>5 (Excelente)</small>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="comentarios" class="form-label">Comentarios Adicionales</label>
+                                            <textarea class="form-control" id="comentarios" rows="3"></textarea>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-tecnm w-100">
+                                            <i class="fas fa-check-circle me-2"></i>Enviar Evaluación
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-7">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Resultados de Evaluaciones</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Docente</th>
+                                                    <th>Promedio</th>
+                                                    <th>Planificación</th>
+                                                    <th>Dominio</th>
+                                                    <th>Comunicación</th>
+                                                    <th>Evaluación</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Ing. Rodríguez</td>
+                                                    <td><span class="badge bg-success">4.5</span></td>
+                                                    <td>4.7</td>
+                                                    <td>4.8</td>
+                                                    <td>4.2</td>
+                                                    <td>4.3</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Dra. González</td>
+                                                    <td><span class="badge bg-success">4.3</span></td>
+                                                    <td>4.5</td>
+                                                    <td>4.6</td>
+                                                    <td>4.0</td>
+                                                    <td>4.2</td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Mtro. Pérez</td>
+                                                    <td><span class="badge bg-warning text-dark">3.8</span></td>
+                                                    <td>3.5</td>
+                                                    <td>4.2</td>
+                                                    <td>3.7</td>
+                                                    <td>3.8</td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    
+                                    <div class="mt-4">
+                                        <h6>Distribución de Calificaciones</h6>
+                                        <div class="mb-2">
+                                            <div class="d-flex justify-content-between">
+                                                <span>Excelente (4.1-5.0)</span>
+                                                <span>65%</span>
+                                            </div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-success" role="progressbar" style="width: 65%;" aria-valuenow="65" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2">
+                                            <div class="d-flex justify-content-between">
+                                                <span>Bueno (3.6-4.0)</span>
+                                                <span>20%</span>
+                                            </div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-info" role="progressbar" style="width: 20%;" aria-valuenow="20" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2">
+                                            <div class="d-flex justify-content-between">
+                                                <span>Regular (3.0-3.5)</span>
+                                                <span>10%</span>
+                                            </div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-warning" role="progressbar" style="width: 10%;" aria-valuenow="10" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                        <div class="mb-2">
+                                            <div class="d-flex justify-content-between">
+                                                <span>Deficiente (1.0-2.9)</span>
+                                                <span>5%</span>
+                                            </div>
+                                            <div class="progress">
+                                                <div class="progress-bar bg-danger" role="progressbar" style="width: 5%;" aria-valuenow="5" aria-valuemin="0" aria-valuemax="100"></div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <div class="container">
+            <p class="mb-0">Tecnológico Nacional de México © 2023 - Todos los derechos reservados</p>
+            <p class="mb-0">Sistema de Gestión de Docentes v1.0</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Script para cambiar entre secciones
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.sidebar .nav-link');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remover clase active de todos los links
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    
+                    // Agregar clase active al link clickeado
+                    this.classList.add('active');
+                    
+                    // Obtener el objetivo del link
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    if (targetSection) {
+                        // Scroll suave a la sección
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 120,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+        });
+    </script>
+</body>
+</html>

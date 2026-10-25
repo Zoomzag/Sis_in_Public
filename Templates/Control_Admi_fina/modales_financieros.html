@@ -1,0 +1,81 @@
+<!-- Modal Colegiaturas -->
+<div class="modal fade" id="modalColegiaturas" tabindex="-1" aria-labelledby="modalColegiaturasLabel"
+    aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalColegiaturasLabel">Gestión de Colegiaturas</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Concepto</th>
+                                <th>Monto</th>
+                                <th>Periodicidad</th>
+                                <th>Obligatorio</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for concepto in conceptos_pago %}
+                            <tr>
+                                <td>{{ concepto.nombre }}</td>
+                                <td>${{ concepto.monto }}</td>
+                                <td>{{ concepto.periodicidad }}</td>
+                                <td>{% if concepto.obligatorio %}Sí{% else %}No{% endif %}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">No hay conceptos de pago registrados</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+<!-- Modal Becas -->
+<div class="modal fade" id="modalBecas" tabindex="-1" aria-labelledby="modalBecasLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalBecasLabel">Gestión de Becas</h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal"
+                    aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="table-responsive">
+                    <table class="table table-striped">
+                        <thead>
+                            <tr>
+                                <th>Alumno</th>
+                                <th>Tipo Beca</th>
+                                <th>Porcentaje</th>
+                                <th>Estatus</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            {% for beca in becas_activas %}
+                            <tr>
+                                <td>{{ beca.id_alumno.nombre }}</td>
+                                <td>{{ beca.tipo_beca }}</td>
+                                <td>{{ beca.porcentaje }}%</td>
+                                <td>{{ beca.estatus }}</td>
+                            </tr>
+                            {% empty %}
+                            <tr>
+                                <td colspan="4" class="text-center">No hay becas activas</td>
+                            </tr>
+                            {% endfor %}
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

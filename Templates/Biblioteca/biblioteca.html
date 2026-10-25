@@ -1,0 +1,316 @@
+{% extends 'Biblioteca/base.html' %}
+{% load static %}
+
+{% block title %}Módulo de Biblioteca - TecNM{% endblock %}
+
+{% block extra_css %}
+<style>
+    .biblioteca-container {
+        background-color: #f8f9fa;
+        min-height: calc(100vh - 200px);
+        padding: 20px 0;
+    }
+    
+    .sidebar {
+        background-color: #1a1d29;
+        padding: 1rem;
+        color: white;
+        border-radius: 10px;
+    }
+    
+    .sidebar .nav-link {
+        color: #e0e0e0;
+        padding: 0.75rem 1rem;
+        margin-bottom: 0.5rem;
+        border-radius: 5px;
+        transition: all 0.3s ease;
+    }
+    
+    .sidebar .nav-link:hover,
+    .sidebar .nav-link.active {
+        background-color: #28a745;
+        color: white;
+        text-decoration: none;
+    }
+    
+    .stat-card {
+        background: linear-gradient(135deg, #1a1d29, #2a2e3f);
+        color: white;
+        border: none;
+        border-radius: 10px;
+        transition: transform 0.2s ease;
+    }
+    
+    .stat-card:hover {
+        transform: translateY(-2px);
+    }
+    
+    .stat-number {
+        font-size: 2rem;
+        font-weight: bold;
+        color: #28a745;
+    }
+    
+    .stat-label {
+        font-size: 0.9rem;
+        opacity: 0.9;
+    }
+    
+    .section-title {
+        color: #1a1d29;
+        border-bottom: 2px solid #28a745;
+        padding-bottom: 0.5rem;
+        margin-bottom: 1.5rem;
+    }
+    
+    .btn-tecnm {
+        background-color: #28a745;
+        border-color: #28a745;
+        color: white;
+        border-radius: 20px;
+    }
+    
+    .resource-card {
+        transition: transform 0.2s ease;
+        border: none;
+        border-radius: 10px;
+        height: 100%;
+    }
+    
+    .resource-card:hover {
+        transform: translateY(-3px);
+    }
+</style>
+{% endblock %}
+
+{% block content %}
+<h1 class="display-5 fw-bold">Biblioteca</h1>
+<div class="biblioteca-container">
+    <div class="container">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3 col-md-4 mb-4">
+                <div class="sidebar">
+                    <nav class="nav flex-column">
+                        <a class="nav-link active" href="#prestamo">
+                            <i class="fas fa-exchange-alt"></i> Préstamo y Devolución
+                        </a>
+                        <a class="nav-link" href="#inventario">
+                            <i class="fas fa-boxes"></i> Control de Inventario
+                        </a>
+                        <a class="nav-link" href="#digital">
+                            <i class="fas fa-digital-tachograph"></i> Contenidos Digitales
+                        </a>
+                    </nav>
+                    
+                    <div class="mt-4 p-3">
+                        <h6 class="text-white">Categorías de Material</h6>
+                        <div class="list-group">
+                            <a href="{% url 'biblioteca' %}?categoria=todos" class="list-group-item list-group-item-action {% if not request.GET.categoria or request.GET.categoria == 'todos' %}active{% endif %}">
+                                Todos los materiales
+                            </a>
+                            <a href="{% url 'biblioteca' %}?categoria=libros" class="list-group-item list-group-item-action {% if request.GET.categoria == 'libros' %}active{% endif %}">
+                                Libros
+                            </a>
+                            <a href="{% url 'biblioteca' %}?categoria=revistas" class="list-group-item list-group-item-action {% if request.GET.categoria == 'revistas' %}active{% endif %}">
+                                Revistas
+                            </a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9 col-md-8">
+                <!-- Dashboard Stats -->
+                <div class="row mb-4">
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="stat-number">{{ materiales_count }}</div>
+                                <div class="stat-label">Materiales Disponibles</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="stat-number">{{ prestamos_activos }}</div>
+                                <div class="stat-label">Préstamos Activos</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="stat-number">{{ prestamos_vencidos }}</div>
+                                <div class="stat-label">Préstamos Vencidos</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="stat-number">{{ recursos_digitales }}</div>
+                                <div class="stat-label">Recursos Digitales</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Préstamo y Control de Materiales -->
+                <div class="main-content mb-4" id="prestamo">
+                    <h3 class="section-title">
+                        <i class="fas fa-exchange-alt me-2"></i>Préstamo y Control de Materiales
+                    </h3>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Registrar Préstamo</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form method="POST" action="{% url 'registrar_prestamo' %}">
+                                        {% csrf_token %}
+                                        <div class="mb-3">
+                                            <label class="form-label">Usuario</label>
+                                            <input type="text" class="form-control" name="usuario" placeholder="ID, nombre o matrícula" required>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Material</label>
+                                            <input type="text" class="form-control" name="material" placeholder="Código, título o autor" required>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label class="form-label">Fecha de Devolución</label>
+                                            <input type="date" class="form-control" name="fecha_devolucion" required>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-tecnm w-100">
+                                            <i class="fas fa-check-circle me-2"></i>Registrar Préstamo
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Préstamos Activos</h5>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Usuario</th>
+                                                    <th>Material</th>
+                                                    <th>Vence</th>
+                                                    <th>Estado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                {% for prestamo in prestamos_activos_list %}
+                                                <tr>
+                                                    <td>{{ prestamo.id_usuario.username }}</td>
+                                                    <td>{{ prestamo.id_material.titulo }}</td>
+                                                    <td>{{ prestamo.fecha_devolucion_esperada|date:"d/m/Y" }}</td>
+                                                    <td>
+                                                        {% if prestamo.fecha_devolucion_esperada < now %}
+                                                        <span class="badge bg-danger">Vencido</span>
+                                                        {% else %}
+                                                        <span class="badge bg-success">Activo</span>
+                                                        {% endif %}
+                                                    </td>
+                                                </tr>
+                                                {% empty %}
+                                                <tr>
+                                                    <td colspan="4" class="text-center">No hay préstamos activos</td>
+                                                </tr>
+                                                {% endfor %}
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Inventario de Materiales</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Título</th>
+                                            <th>Autor</th>
+                                            <th>Categoría</th>
+                                            <th>Disponibilidad</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        {% for material in materiales %}
+                                        <tr>
+                                            <td>LIB-{{ material.id_material|stringformat:"04d" }}</td>
+                                            <td>{{ material.titulo }}</td>
+                                            <td>{{ material.autor }}</td>
+                                            <td>{{ material.tipo_material }}</td>
+                                            <td>
+                                                {% if material.ejemplares_disponibles > 0 %}
+                                                <span class="badge bg-success">Disponible</span>
+                                                {% else %}
+                                                <span class="badge bg-warning text-dark">Prestado</span>
+                                                {% endif %}
+                                            </td>
+                                        </tr>
+                                        {% empty %}
+                                        <tr>
+                                            <td colspan="5" class="text-center">No hay materiales registrados</td>
+                                        </tr>
+                                        {% endfor %}
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acceso a Contenidos Digitales -->
+                <div class="main-content mb-4" id="digital">
+                    <h3 class="section-title">
+                        <i class="fas fa-digital-tachograph me-2"></i>Acceso a Contenidos Digitales
+                    </h3>
+                    
+                    <div class="row">
+                        {% for recurso in recursos_digitales_list %}
+                        <div class="col-md-4 mb-3">
+                            <div class="card resource-card">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="badge bg-info">{{ recurso.tipo }}</span>
+                                        <i class="fas {{ recurso.icono }} text-tecnm"></i>
+                                    </div>
+                                    <h5 class="card-title">{{ recurso.titulo }}</h5>
+                                    <p class="card-text">{{ recurso.autor }}</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">{{ recurso.descripcion }}</small>
+                                        <a href="#" class="btn btn-sm btn-tecnm">Acceder</a>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

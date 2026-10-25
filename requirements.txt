@@ -1,0 +1,9 @@
+asgiref==3.9.1
+Django==5.2.1
+mysqlclient==2.2.7
+pip==25.2
+ply==3.11
+setuptools==78.1.1
+sqlparse==0.5.3
+tzdata==2025.2
+wheel==0.45.1

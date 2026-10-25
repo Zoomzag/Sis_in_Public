@@ -1,0 +1,135 @@
+{% extends "Administracion_academica/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="module-content">
+    <h2 class="my-4">Control de Asignaturas y Horarios</h2>
+
+    <div class="card">
+        <div class="card-header d-flex justify-content-between align-items-center bg-primary text-white">
+            <h5 class="mb-0">Proceso de Control de Horarios</h5>
+            <a href="{% url 'agregar_horario' %}" class="btn btn-sm btn-light">
+                <i class="bi bi-plus-circle"></i> Nuevo Horario </a>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-hover">
+                    <thead>
+                        <tr>
+                            <th>Entradas</th>
+                            <th>Salidas</th>
+                            <th>Justificación</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        <tr>
+                            <td>Plan de estudios vigente</td>
+                            <td>Horario de docente por grupo</td>
+                            <td>Se genera el horario oficial de cada grupo</td>
+                        </tr>
+                        <tr>
+                            <td>Oferta académica del semestre</td>
+                            <td>Horario por maestro</td>
+                            <td>Se genera el horario individual de cada docente</td>
+                        </tr>
+                        <tr>
+                            <td>Disponibilidad de docentes</td>
+                            <td>Reporte de conflictos</td>
+                            <td>Se genera un informe de los conflictos que hay en los procesos</td>
+                        </tr>
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Horarios por Grupo</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for grupo in grupos %}
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ grupo.nombre_grupo }}</h6>
+                                <span class="badge bg-primary">{{ grupo.id_carrera.nombre }}</span>
+                            </div>
+                            <p class="mb-1">{{ grupo.semestre }}° Semestre</p>
+                        </a>
+                        {% empty %}
+                        <div class="list-group-item">
+                            No hay grupos registrados.
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-secondary text-white">
+                    <h5 class="mb-0">Horarios por Docente</h5>
+                </div>
+                <div class="card-body">
+                    <div class="list-group">
+                        {% for docente in docentes %}
+                        <a href="#" class="list-group-item list-group-item-action">
+                            <div class="d-flex w-100 justify-content-between">
+                                <h6 class="mb-1">{{ docente.nombre }}</h6>
+                                <span class="badge bg-info">{{ docente.num_asignaturas }} asignatura(s)</span>
+                            </div>
+                            <p class="mb-1">Disponibilidad: {{ docente.disponibilidad|truncatewords:5 }}</p>
+                        </a>
+                        {% empty %}
+                        <div class="list-group-item">
+                            No hay docentes registrados.
+                        </div>
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tabla de horarios recientes -->
+    <div class="card mt-4">
+        <div class="card-header bg-light">
+            <h5 class="mb-0">Horarios Registrados Recientemente</h5>
+        </div>
+        <div class="card-body">
+            <div class="table-responsive">
+                <table class="table table-striped">
+                    <thead>
+                        <tr>
+                            <th>Grupo</th>
+                            <th>Asignatura</th>
+                            <th>Docente</th>
+                            <th>Día</th>
+                            <th>Horario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for horario in horarios %}
+                        <tr>
+                            <td>{{ horario.id_grupo.nombre_grupo }}</td>
+                            <td>{{ horario.id_asignatura.nombre }}</td>
+                            <td>{{ horario.id_docente.nombre }}</td>
+                            <td>{{ horario.dia_semana }}</td>
+                            <td>{{ horario.hora_inicio }} - {{ horario.hora_fin }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="5" class="text-center">No hay horarios registrados.</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

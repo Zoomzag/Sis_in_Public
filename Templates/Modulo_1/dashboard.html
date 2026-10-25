@@ -1,0 +1,84 @@
+{% extends "Administracion_academica/base.html" %}
+{% load static %}
+
+{% block content %}
+<div class="module-content">
+    <h2 class="my-4">Dashboard de Administración Académica</h2>
+    
+    <div class="row">
+        <div class="col-md-3">
+            <div class="stats-card blue">
+                <i class="bi bi-journals"></i>
+                <div class="number">{{ planes_count }}</div>
+                <div>Planes de Estudio</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card blue">
+                <i class="bi bi-people-fill"></i>
+                <div class="number">{{ estudiantes_count }}</div>
+                <div>Estudiantes</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card blue">
+                <i class="bi bi-person-badge"></i>
+                <div class="number">{{ docentes_count }}</div>
+                <div>Docentes</div>
+            </div>
+        </div>
+        <div class="col-md-3">
+            <div class="stats-card blue">
+                <i class="bi bi-calendar-event"></i>
+                <div class="number">{{ grupos_count }}</div>
+                <div>Grupos Activos</div>
+            </div>
+        </div>
+    </div>
+    
+    <div class="row mt-4">
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-warning">
+                    <h5 class="mb-0">Alertas Recientes</h5>
+                </div>
+                <div class="card-body">
+                    {% for alerta in alertas %}
+                    <div class="alert alert-warning">
+                        <i class="bi bi-exclamation-triangle"></i> 
+                        <strong>{{ alerta.id_alumno.nombre }}</strong> - {{ alerta.tipo }}: {{ alerta.mensaje }}
+                        <small class="d-block text-muted">{{ alerta.fecha }}</small>
+                    </div>
+                    {% empty %}
+                    <div class="alert alert-success">
+                        <i class="bi bi-check-circle"></i> No hay alertas pendientes
+                    </div>
+                    {% endfor %}
+                </div>
+            </div>
+        </div>
+        
+        <div class="col-md-6">
+            <div class="card">
+                <div class="card-header bg-info text-white">
+                    <h5 class="mb-0">Actividad Reciente</h5>
+                </div>
+                <div class="card-body">
+                    <ul class="list-group list-group-flush">
+                        {% for actividad in actividades %}
+                        <li class="list-group-item">
+                            <small class="text-muted">{{ actividad.fecha }}</small><br>
+                            {{ actividad.descripcion }}
+                        </li>
+                        {% empty %}
+                        <li class="list-group-item">
+                            <small class="text-muted">No hay actividad reciente</small>
+                        </li>
+                        {% endfor %}
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,557 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Módulo de Biblioteca - TecNM</title>
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    </style>
+</head>
+<body>
+    <!-- Header TecNM -->
+    <div class="tecnm-header">
+        <div class="container">
+            <div class="row align-items-center">
+                <div class="col-md-2 text-center">
+                    <img src="data:image/svg+xml;base64,PHN2ZyB4bWxucz0iaHR0cDovL3d3dy53My5vcmcvMjAwMC9zdmciIHdpZHRoPSIxMDAiIGhlaWdodD0iMTAwIiB2aWV3Qm94PSIwIDAgMTAwIDEwMCI+PHJlY3QgeD0iMCIgeT0iMCIgd2lkdGg9IjEwMCIgaGVpZ2h0PSIxMDAiIGZpbGw9IiMwQzIzNDAiLz48dGV4dCB4PSI1MCIgeT0iNTAiIGZvbnQtZmFtaWx5PSJBcmlhbCIgZm9udC1zaXplPSIxMiIgdGV4dC1hbmNob3I9Im1pZGRsZSIgYWxpZ25tZW50LWJhc2VsaW5lPSJtaWRkbGUiIGZpbGw9IiNGRkYiPlRlY05NPC90ZXh0Pjwvc3ZnPg==" alt="TecNM Logo" class="tecnm-logo">
+                </div>
+                <div class="col-md-8">
+                    <h3 class="mb-0">Tecnológico Nacional de México</h3>
+                    <p class="mb-0">Sistema de Gestión de Biblioteca</p>
+                </div>
+                <div class="col-md-2 text-end">
+                    <small>Biblioteca Central</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Navbar -->
+    <nav class="navbar navbar-expand-lg navbar-dark">
+        <div class="container">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="collapse navbar-collapse" id="navbarNav">
+                <ul class="navbar-nav me-auto">
+                    <li class="nav-item">
+                        <a class="nav-link active" href="#">
+                            <i class="fas fa-home me-1"></i> Inicio
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-book me-1"></i> Catálogo
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-laptop me-1"></i> Recursos Digitales
+                        </a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-calendar me-1"></i> Eventos
+                        </a>
+                    </li>
+                </ul>
+                <ul class="navbar-nav ms-auto">
+                    <li class="nav-item">
+                        <a class="nav-link" href="#">
+                            <i class="fas fa-user me-1"></i> Mi Cuenta
+                        </a>
+                    </li>
+                    <li class="nav-item dropdown">
+                        <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-bs-toggle="dropdown">
+                            <i class="fas fa-user-circle me-1"></i> Bibliotecario
+                        </a>
+                        <ul class="dropdown-menu dropdown-menu-end">
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-cog me-2"></i>Configuración</a></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-bell me-2"></i>Notificaciones</a></li>
+                            <li><hr class="dropdown-divider"></li>
+                            <li><a class="dropdown-item" href="#"><i class="fas fa-sign-out-alt me-2"></i>Cerrar Sesión</a></li>
+                        </ul>
+                    </li>
+                </ul>
+            </div>
+        </div>
+    </nav>
+
+    <div class="container mt-4">
+        <div class="row">
+            <!-- Sidebar -->
+            <div class="col-lg-3 col-md-4 mb-4">
+                <div class="sidebar rounded">
+                    <nav class="nav flex-column">
+                        <a class="nav-link active" href="#prestamo">
+                            <i class="fas fa-exchange-alt"></i> Préstamo y Devolución
+                        </a>
+                        <a class="nav-link" href="#inventario">
+                            <i class="fas fa-boxes"></i> Control de Inventario
+                        </a>
+                        <a class="nav-link" href="#digital">
+                            <i class="fas fa-digital-tachograph"></i> Contenidos Digitales
+                        </a>
+                        <a class="nav-link" href="#usuarios">
+                            <i class="fas fa-users"></i> Gestión de Usuarios
+                        </a>
+                        <a class="nav-link" href="#reportes">
+                            <i class="fas fa-chart-bar"></i> Reportes y Estadísticas
+                        </a>
+                    </nav>
+                    
+                    <div class="mt-4 p-3">
+                        <h6 class="text-white">Categorías de Material</h6>
+                        <div class="list-group">
+                            <a href="#" class="list-group-item list-group-item-action category-filter active">Todos los materiales</a>
+                            <a href="#" class="list-group-item list-group-item-action category-filter">Libros</a>
+                            <a href="#" class="list-group-item list-group-item-action category-filter">Revistas</a>
+                            <a href="#" class="list-group-item list-group-item-action category-filter">Tesis</a>
+                            <a href="#" class="list-group-item list-group-item-action category-filter">Material audiovisual</a>
+                            <a href="#" class="list-group-item list-group-item-action category-filter">Recursos digitales</a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Main Content -->
+            <div class="col-lg-9 col-md-8">
+                <!-- Dashboard Stats -->
+                <div class="row mb-4">
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="stat-number">5,248</div>
+                                <div class="stat-label">Materiales Disponibles</div>
+                                <div class="progress mt-2" style="height: 5px;">
+                                    <div class="progress-bar" style="width: 85%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="stat-number">382</div>
+                                <div class="stat-label">Préstamos Activos</div>
+                                <div class="progress mt-2" style="height: 5px;">
+                                    <div class="progress-bar" style="width: 60%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="stat-number">42</div>
+                                <div class="stat-label">Préstamos Vencidos</div>
+                                <div class="progress mt-2" style="height: 5px;">
+                                    <div class="progress-bar bg-danger" style="width: 12%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-xl-3 col-md-6 mb-3">
+                        <div class="card stat-card">
+                            <div class="card-body">
+                                <div class="stat-number">1,537</div>
+                                <div class="stat-label">Recursos Digitales</div>
+                                <div class="progress mt-2" style="height: 5px;">
+                                    <div class="progress-bar bg-success" style="width: 92%;"></div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Préstamo y Control de Materiales -->
+                <div class="main-content mb-4" id="prestamo">
+                    <h3 class="section-title">
+                        <i class="fas fa-exchange-alt me-2"></i>Préstamo y Control de Materiales
+                    </h3>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header">
+                                    <h5 class="mb-0">Registrar Préstamo</h5>
+                                </div>
+                                <div class="card-body">
+                                    <form>
+                                        <div class="mb-3">
+                                            <label for="usuarioPrestamo" class="form-label">Buscar Usuario</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="usuarioPrestamo" placeholder="ID, nombre o matrícula">
+                                                <button class="btn btn-tecnm" type="button">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="materialPrestamo" class="form-label">Buscar Material</label>
+                                            <div class="input-group">
+                                                <input type="text" class="form-control" id="materialPrestamo" placeholder="Código, título o autor">
+                                                <button class="btn btn-tecnm" type="button">
+                                                    <i class="fas fa-search"></i>
+                                                </button>
+                                            </div>
+                                        </div>
+                                        
+                                        <div class="mb-3">
+                                            <label for="fechaDevolucion" class="form-label">Fecha de Devolución</label>
+                                            <input type="date" class="form-control" id="fechaDevolucion">
+                                        </div>
+                                        
+                                        <div class="mb-3 form-check">
+                                            <input type="checkbox" class="form-check-input" id="renovacionAutomatica">
+                                            <label class="form-check-label" for="renovacionAutomatica">Permitir renovación automática</label>
+                                        </div>
+                                        
+                                        <button type="submit" class="btn btn-tecnm w-100">
+                                            <i class="fas fa-check-circle me-2"></i>Registrar Préstamo
+                                        </button>
+                                    </form>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-6">
+                            <div class="card">
+                                <div class="card-header d-flex justify-content-between align-items-center">
+                                    <h5 class="mb-0">Préstamos Activos</h5>
+                                    <button class="btn btn-sm btn-outline-tecnm">
+                                        <i class="fas fa-sync"></i>
+                                    </button>
+                                </div>
+                                <div class="card-body">
+                                    <div class="table-responsive">
+                                        <table class="table table-hover">
+                                            <thead>
+                                                <tr>
+                                                    <th>Usuario</th>
+                                                    <th>Material</th>
+                                                    <th>Vence</th>
+                                                    <th>Estado</th>
+                                                </tr>
+                                            </thead>
+                                            <tbody>
+                                                <tr>
+                                                    <td>Juan Pérez (L000123)</td>
+                                                    <td>Cálculo Diferencial</td>
+                                                    <td>25/05/2023</td>
+                                                    <td><span class="badge bg-success">Activo</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>María García (L000456)</td>
+                                                    <td>Introducción a la Programación</td>
+                                                    <td>20/05/2023</td>
+                                                    <td><span class="badge bg-warning text-dark">Por vencer</span></td>
+                                                </tr>
+                                                <tr>
+                                                    <td>Carlos López (L000789)</td>
+                                                    <td>Base de Datos Avanzada</td>
+                                                    <td>15/05/2023</td>
+                                                    <td><span class="badge bg-danger">Vencido</span></td>
+                                                </tr>
+                                            </tbody>
+                                        </table>
+                                    </div>
+                                    <div class="d-grid gap-2">
+                                        <button class="btn btn-outline-tecnm">
+                                            <i class="fas fa-plus me-2"></i>Registrar Devolución
+                                        </button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="card">
+                        <div class="card-header">
+                            <h5 class="mb-0">Inventario de Materiales</h5>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table table-striped">
+                                    <thead>
+                                        <tr>
+                                            <th>Código</th>
+                                            <th>Título</th>
+                                            <th>Autor</th>
+                                            <th>Categoría</th>
+                                            <th>Disponibilidad</th>
+                                            <th>Acciones</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        <tr>
+                                            <td>LIB-0001</td>
+                                            <td>Cálculo Diferencial</td>
+                                            <td>James Stewart</td>
+                                            <td>Matemáticas</td>
+                                            <td><span class="badge bg-success">Disponible</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-tecnm">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-tecnm">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>LIB-0002</td>
+                                            <td>Introducción a la Programación</td>
+                                            <td>Luis Joyanes</td>
+                                            <td>Computación</td>
+                                            <td><span class="badge bg-warning text-dark">Prestado</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-tecnm">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-tecnm">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                        <tr>
+                                            <td>TES-0025</td>
+                                            <td>Machine Learning aplicado a diagnóstico médico</td>
+                                            <td>Ana Rodríguez</td>
+                                            <td>Tesis</td>
+                                            <td><span class="badge bg-success">Disponible</span></td>
+                                            <td>
+                                                <button class="btn btn-sm btn-tecnm">
+                                                    <i class="fas fa-eye"></i>
+                                                </button>
+                                                <button class="btn btn-sm btn-outline-tecnm">
+                                                    <i class="fas fa-edit"></i>
+                                                </button>
+                                            </td>
+                                        </tr>
+                                    </tbody>
+                                </table>
+                            </div>
+                            <nav aria-label="Page navigation">
+                                <ul class="pagination justify-content-center">
+                                    <li class="page-item disabled">
+                                        <a class="page-link" href="#">Anterior</a>
+                                    </li>
+                                    <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">2</a></li>
+                                    <li class="page-item"><a class="page-link" href="#">3</a></li>
+                                    <li class="page-item">
+                                        <a class="page-link" href="#">Siguiente</a>
+                                    </li>
+                                </ul>
+                            </nav>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Acceso a Contenidos Digitales -->
+                <div class="main-content mb-4" id="digital">
+                    <h3 class="section-title">
+                        <i class="fas fa-digital-tachograph me-2"></i>Acceso a Contenidos Digitales
+                    </h3>
+                    
+                    <div class="row mb-4">
+                        <div class="col-md-8">
+                            <div class="input-group mb-3">
+                                <input type="text" class="form-control" placeholder="Buscar recursos digitales..." aria-label="Buscar recursos digitales">
+                                <button class="btn btn-tecnm" type="button">
+                                    <i class="fas fa-search me-2"></i>Buscar
+                                </button>
+                            </div>
+                        </div>
+                        <div class="col-md-4">
+                            <select class="form-select">
+                                <option selected>Filtrar por categoría...</option>
+                                <option>Libros electrónicos</option>
+                                <option>Revistas científicas</option>
+                                <option>Videos educativos</option>
+                                <option>Bases de datos</option>
+                                <option>Audio libros</option>
+                            </select>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card resource-card digital-content">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="badge bg-info">e-Book</span>
+                                        <i class="fas fa-book-open text-tecnm"></i>
+                                    </div>
+                                    <h5 class="card-title">Algebra Lineal y sus Aplicaciones</h5>
+                                    <p class="card-text">David C. Lay</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">Disponible en PDF y EPUB</small>
+                                        <button class="btn btn-sm btn-tecnm">Acceder</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="card resource-card digital-content">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="badge bg-warning text-dark">Revista</span>
+                                        <i class="fas fa-newspaper text-tecnm"></i>
+                                    </div>
+                                    <h5 class="card-title">Nature: International Journal of Science</h5>
+                                    <p class="card-text">Vol. 615, Issue 7952</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">Artículos de investigación</small>
+                                        <button class="btn btn-sm btn-tecnm">Acceder</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="card resource-card digital-content">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="badge bg-success">Video</span>
+                                        <i class="fas fa-video text-tecnm"></i>
+                                    </div>
+                                    <h5 class="card-title">Programación Orientada a Objetos</h5>
+                                    <p class="card-text">Curso completo con ejemplos</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">12 horas de contenido</small>
+                                        <button class="btn btn-sm btn-tecnm">Acceder</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <div class="row">
+                        <div class="col-md-4 mb-3">
+                            <div class="card resource-card digital-content">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="badge bg-primary">Base de Datos</span>
+                                        <i class="fas fa-database text-tecnm"></i>
+                                    </div>
+                                    <h5 class="card-title">IEEE Xplore Digital Library</h5>
+                                    <p class="card-text">Acceso a publicaciones técnicas</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">Artículos de ingeniería</small>
+                                        <button class="btn btn-sm btn-tecnm">Acceder</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="card resource-card digital-content">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="badge bg-secondary">Audio</span>
+                                        <i class="fas fa-headphones text-tecnm"></i>
+                                    </div>
+                                    <h5 class="card-title">Historia de México: AudioLibro</h5>
+                                    <p class="card-text">Desde la época prehispánica</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">Duración: 15 horas</small>
+                                        <button class="btn btn-sm btn-tecnm">Acceder</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                        
+                        <div class="col-md-4 mb-3">
+                            <div class="card resource-card digital-content">
+                                <div class="card-body">
+                                    <div class="d-flex justify-content-between align-items-center mb-2">
+                                        <span class="badge bg-danger">Software</span>
+                                        <i class="fas fa-laptop-code text-tecnm"></i>
+                                    </div>
+                                    <h5 class="card-title">MATLAB Online</h5>
+                                    <p class="card-text">Acceso a MATLAB para estudiantes</p>
+                                    <div class="d-flex justify-content-between align-items-center">
+                                        <small class="text-muted">Licencia institucional</small>
+                                        <button class="btn btn-sm btn-tecnm">Acceder</button>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    
+                    <nav aria-label="Page navigation">
+                        <ul class="pagination justify-content-center">
+                            <li class="page-item disabled">
+                                <a class="page-link" href="#">Anterior</a>
+                            </li>
+                            <li class="page-item active"><a class="page-link" href="#">1</a></li>
+                            <li class="page-item"><a class="page-link" href="#">2</a></li>
+                            <li class="page-item"><a class="page-link" href="#">3</a></li>
+                            <li class="page-item">
+                                <a class="page-link" href="#">Siguiente</a>
+                            </li>
+                        </ul>
+                    </nav>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <footer class="bg-dark text-white text-center py-3 mt-5">
+        <div class="container">
+            <p class="mb-0">Tecnológico Nacional de México © 2023 - Todos los derechos reservados</p>
+            <p class="mb-0">Sistema de Gestión de Biblioteca v1.0</p>
+        </div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.0-alpha1/dist/js/bootstrap.bundle.min.js"></script>
+    <script>
+        // Script para cambiar entre secciones
+        document.addEventListener('DOMContentLoaded', function() {
+            const navLinks = document.querySelectorAll('.sidebar .nav-link');
+            const categoryFilters = document.querySelectorAll('.category-filter');
+            
+            navLinks.forEach(link => {
+                link.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remover clase active de todos los links
+                    navLinks.forEach(l => l.classList.remove('active'));
+                    
+                    // Agregar clase active al link clickeado
+                    this.classList.add('active');
+                    
+                    // Obtener el objetivo del link
+                    const targetId = this.getAttribute('href');
+                    const targetSection = document.querySelector(targetId);
+                    
+                    if (targetSection) {
+                        // Scroll suave a la sección
+                        window.scrollTo({
+                            top: targetSection.offsetTop - 120,
+                            behavior: 'smooth'
+                        });
+                    }
+                });
+            });
+            
+            categoryFilters.forEach(filter => {
+                filter.addEventListener('click', function(e) {
+                    e.preventDefault();
+                    
+                    // Remover clase active de todos los filters
+                    categoryFilters.forEach(f => f.classList.remove('active'));
+                    
+                    // Agregar clase active al filter clickeado
+                    this.classList.add('active');
+                });
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,878 @@
+{% extends 'Gestion_de_Alumnos/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+.dashboard-card {
+    transition: transform 0.2s ease;
+    border-radius: 10px;
+    border: 1px solid #dee2e6;
+    background: #ffffff;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-3px);
+}
+
+.module-icon {
+    color: #28a745;
+}
+
+.dashboard-header {
+    border-bottom: 1px solid #dee2e6;
+    padding-bottom: 1.5rem;
+    margin-bottom: 2rem;
+}
+
+.section-title {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    border-radius: 20px;
+    padding: 0.5rem 1.5rem;
+    font-weight: 500;
+}
+
+.btn-primary:hover {
+    background-color: #218838 !important;
+    border-color: #218838 !important;
+}
+
+/* ESTILOS OSCUROS PARA MODALES */
+.modal-content {
+    border-radius: 10px;
+    border: none;
+    background: #1a1d29;
+    color: #ffffff;
+}
+
+.modal-header {
+    background-color: #2a2e3f;
+    color: #ffffff;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.modal-body {
+    background-color: #1a1d29;
+    color: #e9ecef;
+}
+
+.modal-footer {
+    background-color: #1a1d29;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+/* Estilos para formularios en modales oscuros */
+.modal .form-control, 
+.modal .form-select {
+    background-color: #2a2e3f;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: #ffffff;
+}
+
+.modal .form-control:focus, 
+.modal .form-select:focus {
+    background-color: #2a2e3f;
+    border-color: #28a745;
+    color: #ffffff;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.modal .form-label {
+    color: #e9ecef;
+    font-weight: 500;
+}
+
+.modal .form-text {
+    color: #adb5bd;
+}
+
+.modal .form-check-label {
+    color: #e9ecef;
+}
+
+.modal .form-control::placeholder {
+    color: #6c757d;
+}
+
+/* Alertas en modales oscuros */
+.modal .alert-info {
+    background-color: rgba(23, 162, 184, 0.2);
+    border-color: rgba(23, 162, 184, 0.3);
+    color: #85d6e6;
+}
+
+.modal .alert-warning {
+    background-color: rgba(255, 193, 7, 0.2);
+    border-color: rgba(255, 193, 7, 0.3);
+    color: #ffd965;
+}
+
+.modal .alert-success {
+    background-color: rgba(40, 167, 69, 0.2);
+    border-color: rgba(40, 167, 69, 0.3);
+    color: #75b798;
+}
+
+.table {
+    background-color: #ffffff;
+    color: #495057;
+}
+
+.alert {
+    border-radius: 10px;
+    border: 1px solid;
+}
+
+.card-body {
+    padding: 1.5rem;
+}
+
+.card-title {
+    font-weight: 600;
+    margin-bottom: 0.75rem;
+    color: #2c3e50;
+}
+
+.card-text {
+    color: #6c757d;
+    font-size: 0.9rem;
+    margin-bottom: 1.5rem;
+}
+
+/* Colores específicos para mejor contraste */
+.text-primary-custom {
+    color: #28a745 !important;
+}
+
+.text-muted-custom {
+    color: #6c757d !important;
+}
+
+/* Mejor contraste para el header */
+.dashboard-header h1 {
+    color: #2c3e50;
+}
+
+.dashboard-header .lead {
+    color: #6c757d;
+}
+
+/* Mejor contraste para las tarjetas */
+.dashboard-card .card-title {
+    color: #2c3e50;
+    font-weight: 600;
+}
+
+.dashboard-card .card-text {
+    color: #6c757d;
+}
+
+/* Mejor contraste para los formularios */
+.form-label {
+    color: #495057;
+    font-weight: 500;
+}
+
+.form-text {
+    color: #6c757d;
+}
+
+/* Mejor contraste para las alertas */
+.alert-info {
+    background-color: #d1ecf1;
+    border-color: #bee5eb;
+    color: #0c5460;
+}
+
+.alert-warning {
+    background-color: #fff3cd;
+    border-color: #ffeaa7;
+    color: #856404;
+}
+
+.alert-success {
+    background-color: #d4edda;
+    border-color: #c3e6cb;
+    color: #155724;
+}
+
+/* Mejor contraste para la tabla */
+.table th {
+    color: #2c3e50;
+    border-color: #dee2e6;
+    background-color: #f8f9fa;
+}
+
+.table td {
+    color: #495057;
+    border-color: #dee2e6;
+}
+
+/* Mejor contraste para los checkboxes y radios */
+.form-check-label {
+    color: #495057;
+}
+
+/* Mejor contraste para los placeholders */
+.form-control::placeholder {
+    color: #6c757d;
+}
+
+.form-select:invalid {
+    color: #6c757d;
+}
+
+/* Eliminar todas las sombras y efectos de profundidad */
+.dashboard-container {
+    background: transparent;
+}
+
+main {
+    background: transparent;
+}
+
+.card {
+    box-shadow: none !important;
+}
+
+.modal-content {
+    box-shadow: 0 10px 30px rgba(0,0,0,0.3) !important;
+}
+
+.btn {
+    box-shadow: none !important;
+}
+
+/* Fondo claro para todo */
+body {
+    background-color: #f8f9fa !important;
+}
+
+.dashboard-container {
+    background-color: #f8f9fa;
+    padding: 2rem;
+    border-radius: 10px;
+}
+</style>
+
+<main class="dashboard-container">
+    <header class="dashboard-header mb-4">
+        <h1 class="display-5 fw-bold">Sistema de Trámites Estudiantiles</h1>
+        <p class="lead">Gestión integral de trámites y servicios estudiantiles del Tecnológico de Chihuahua 2</p>
+    </header>
+    
+    <div class="row g-4">
+        <!-- Certificación de Inglés -->
+        <div class="col-md-4 col-sm-6">
+            <div class="card h-100 dashboard-card">
+                <div class="card-body text-center p-4">
+                    <div class="module-icon mb-3">
+                        <i class="bi bi-translate fs-1"></i>
+                    </div>
+                    <h5 class="card-title h6">Certificación de Inglés</h5>
+                    <p class="card-text small">Solicitud y seguimiento de certificaciones de idioma inglés</p>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalIngles">
+                        Acceder
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Servicio Social -->
+        <div class="col-md-4 col-sm-6">
+            <div class="card h-100 dashboard-card">
+                <div class="card-body text-center p-4">
+                    <div class="module-icon mb-3">
+                        <i class="bi bi-people fs-1"></i>
+                    </div>
+                    <h5 class="card-title h6">Servicio Social</h5>
+                    <p class="card-text small">Registro y seguimiento de actividades de servicio social</p>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalServicioSocial">
+                        Acceder
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Documentos -->
+        <div class="col-md-4 col-sm-6">
+            <div class="card h-100 dashboard-card">
+                <div class="card-body text-center p-4">
+                    <div class="module-icon mb-3">
+                        <i class="bi bi-file-earmark-text fs-1"></i>
+                    </div>
+                    <h5 class="card-title h6">Documentos</h5>
+                    <p class="card-text small">Solicitud de constancias, certificados y documentos oficiales</p>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalDocumentos">
+                        Acceder
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Credenciales -->
+        <div class="col-md-4 col-sm-6">
+            <div class="card h-100 dashboard-card">
+                <div class="card-body text-center p-4">
+                    <div class="module-icon mb-3">
+                        <i class="bi bi-person-badge fs-1"></i>
+                    </div>
+                    <h5 class="card-title h6">Credenciales</h5>
+                    <p class="card-text small">Solicitud, renovación y seguimiento de credencial estudiantil</p>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalCredenciales">
+                        Acceder
+                    </button>
+                </div>
+            </div>
+        </div>
+        
+        <!-- Semana Académica -->
+        <div class="col-md-4 col-sm-6">
+            <div class="card h-100 dashboard-card">
+                <div class="card-body text-center p-4">
+                    <div class="module-icon mb-3">
+                        <i class="bi bi-calendar-event fs-1"></i>
+                    </div>
+                    <h5 class="card-title h6">Semana Académica</h5>
+                    <p class="card-text small">Inscripción y gestión de participación en eventos académicos</p>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalSemanaAcademica">
+                        Acceder
+                    </button>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>
+
+<!-- ============================================= -->
+<!-- MODALES OSCUROS -->
+<!-- ============================================= -->
+
+<!-- Modal Inglés -->
+<div class="modal fade" id="modalIngles" tabindex="-1" aria-labelledby="modalInglesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalInglesLabel">
+                    <i class="bi bi-translate me-2"></i>Certificación de Inglés
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Complete el formulario para registrar una certificación de inglés.
+                </div>
+                <form id="formIngles">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Alumno *</label>
+                            <select class="form-select" id="selectAlumnoIngles" required>
+                                <option value="">Seleccionar alumno...</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tipo de Certificación *</label>
+                            <select class="form-select" name="tipo_certificacion" required>
+                                <option value="">Seleccionar tipo...</option>
+                                <option value="toefl">TOEFL</option>
+                                <option value="ielts">IELTS</option>
+                                <option value="cambridge">Cambridge</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Fecha de Examen</label>
+                            <input type="date" class="form-control" name="fecha_examen">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Resultado</label>
+                            <input type="text" class="form-control" name="resultado" placeholder="Puntuación obtenida">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Comentarios</label>
+                        <textarea class="form-control" name="comentarios" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarCertificacionIngles()">Guardar Certificación</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Servicio Social -->
+<div class="modal fade" id="modalServicioSocial" tabindex="-1" aria-labelledby="modalServicioSocialLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalServicioSocialLabel">
+                    <i class="bi bi-people me-2"></i>Servicio Social
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Registre las actividades de servicio social del alumno.
+                </div>
+                <form id="formServicioSocial">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Alumno *</label>
+                            <select class="form-select" id="selectAlumnoServicioSocial" required>
+                                <option value="">Seleccionar alumno...</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Institución/Organización *</label>
+                            <input type="text" class="form-control" name="institucion" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Fecha de Inicio</label>
+                            <input type="date" class="form-control" name="fecha_inicio">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Fecha de Término</label>
+                            <input type="date" class="form-control" name="fecha_termino">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Actividades Realizadas</label>
+                        <textarea class="form-control" name="actividades" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Horas Realizadas</label>
+                        <input type="number" class="form-control" name="horas" min="0" required>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarServicioSocial()">Registrar Servicio Social</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Documentos -->
+<div class="modal fade" id="modalDocumentos" tabindex="-1" aria-labelledby="modalDocumentosLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalDocumentosLabel">
+                    <i class="bi bi-file-earmark-text me-2"></i>Solicitud de Documentos
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Solicite documentos oficiales del Instituto.
+                </div>
+                <form id="formDocumentos">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Alumno *</label>
+                            <select class="form-select" id="selectAlumnoDocumentos" required>
+                                <option value="">Seleccionar alumno...</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tipo de Documento *</label>
+                            <select class="form-select" name="tipo_documento" required>
+                                <option value="">Seleccionar tipo...</option>
+                                <option value="constancia">Constancia de Estudios</option>
+                                <option value="certificado">Certificado Parcial</option>
+                                <option value="kardex">Kardex</option>
+                                <option value="historial">Historial Académico</option>
+                                <option value="otro">Otro</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Motivo de Solicitud</label>
+                        <textarea class="form-control" name="motivo" rows="3" required></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Cantidad de Copias</label>
+                        <input type="number" class="form-control" name="copias" min="1" value="1">
+                    </div>
+                    <div class="form-check mb-3">
+                        <input class="form-check-input" type="checkbox" name="urgente" id="urgente">
+                        <label class="form-check-label" for="urgente">
+                            Solicitud Urgente
+                        </label>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="solicitarDocumento()">Solicitar Documento</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Credenciales -->
+<div class="modal fade" id="modalCredenciales" tabindex="-1" aria-labelledby="modalCredencialesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalCredencialesLabel">
+                    <i class="bi bi-person-badge me-2"></i>Credencial Estudiantil
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Gestión de credenciales estudiantiles.
+                </div>
+                <form id="formCredenciales">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Alumno *</label>
+                            <select class="form-select" id="selectAlumnoCredenciales" required>
+                                <option value="">Seleccionar alumno...</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Tipo de Trámite *</label>
+                            <select class="form-select" name="tipo_tramite" required>
+                                <option value="">Seleccionar tipo...</option>
+                                <option value="nueva">Nueva Credencial</option>
+                                <option value="renovacion">Renovación</option>
+                                <option value="reposicion">Reposición por Pérdida</option>
+                                <option value="actualizacion">Actualización de Datos</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Motivo</label>
+                        <textarea class="form-control" name="motivo" rows="3"></textarea>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Fecha de Solicitud</label>
+                        <input type="date" class="form-control" name="fecha_solicitud">
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="solicitarCredencial()">Solicitar Trámite</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Semana Académica -->
+<div class="modal fade" id="modalSemanaAcademica" tabindex="-1" aria-labelledby="modalSemanaAcademicaLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalSemanaAcademicaLabel">
+                    <i class="bi bi-calendar-event me-2"></i>Semana Académica
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Registro a eventos de la Semana Académica.
+                </div>
+                <form id="formSemanaAcademica">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Alumno *</label>
+                            <select class="form-select" id="selectAlumnoSemanaAcademica" required>
+                                <option value="">Seleccionar alumno...</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Evento *</label>
+                            <select class="form-select" name="evento" required>
+                                <option value="">Seleccionar evento...</option>
+                                <option value="conferencia">Conferencia Magistral</option>
+                                <option value="taller">Taller Práctico</option>
+                                <option value="mesa_redonda">Mesa Redonda</option>
+                                <option value="exposicion">Exposición de Proyectos</option>
+                                <option value="cultural">Actividad Cultural</option>
+                            </select>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Fecha del Evento</label>
+                            <input type="date" class="form-control" name="fecha_evento">
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Horario</label>
+                            <input type="text" class="form-control" name="horario" placeholder="Ej: 10:00 - 12:00 hrs">
+                        </div>
+                    </div>
+                    <div class="mb-3">
+                        <label class="form-label">Comentarios Adicionales</label>
+                        <textarea class="form-control" name="comentarios" rows="3"></textarea>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="registrarEvento()">Registrar en Evento</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// JavaScript para la interactividad de trámites
+const API_BASE = '/api';
+
+// Función para cargar alumnos en todos los selects
+async function cargarAlumnosTramites() {
+    try {
+        const response = await fetch(`${API_BASE}/alumnos/`);
+        if (!response.ok) throw new Error('Error al cargar alumnos');
+        
+        const alumnos = await response.json();
+        
+        // Llenar todos los selects de alumnos
+        const selects = [
+            'selectAlumnoIngles',
+            'selectAlumnoServicioSocial',
+            'selectAlumnoDocumentos',
+            'selectAlumnoCredenciales',
+            'selectAlumnoSemanaAcademica'
+        ];
+        
+        selects.forEach(selectId => {
+            const select = document.getElementById(selectId);
+            if (select) {
+                select.innerHTML = '<option value="">Seleccionar alumno...</option>';
+                alumnos.forEach(alumno => {
+                    const option = document.createElement('option');
+                    option.value = alumno.id_alumno;
+                    option.textContent = `${alumno.nombre} - ${alumno.numero_control || 'N/A'}`;
+                    select.appendChild(option);
+                });
+            }
+        });
+        
+        return alumnos;
+    } catch (error) {
+        console.error('Error cargando alumnos:', error);
+        mostrarError('Error al cargar los alumnos');
+        return [];
+    }
+}
+
+// Función para guardar certificación de inglés
+async function guardarCertificacionIngles() {
+    const form = document.getElementById('formIngles');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    
+    // Validación básica
+    if (!data.alumno || !data.tipo_certificacion) {
+        mostrarError('Alumno y tipo de certificación son requeridos');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/tramites/ingles/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': data.csrfmiddlewaretoken
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            mostrarExito('Certificación de inglés registrada exitosamente');
+            form.reset();
+            $('#modalIngles').modal('hide');
+        } else {
+            mostrarError(result.message);
+        }
+    } catch (error) {
+        mostrarError('Error de conexión: ' + error);
+    }
+}
+
+// Función para guardar servicio social
+async function guardarServicioSocial() {
+    const form = document.getElementById('formServicioSocial');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    
+    // Validación básica
+    if (!data.alumno || !data.institucion || !data.actividades || !data.horas) {
+        mostrarError('Todos los campos marcados con * son requeridos');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/tramites/servicio-social/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': data.csrfmiddlewaretoken
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            mostrarExito('Servicio social registrado exitosamente');
+            form.reset();
+            $('#modalServicioSocial').modal('hide');
+        } else {
+            mostrarError(result.message);
+        }
+    } catch (error) {
+        mostrarError('Error de conexión: ' + error);
+    }
+}
+
+// Función para solicitar documento
+async function solicitarDocumento() {
+    const form = document.getElementById('formDocumentos');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    
+    // Validación básica
+    if (!data.alumno || !data.tipo_documento || !data.motivo) {
+        mostrarError('Todos los campos marcados con * son requeridos');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/tramites/documentos/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': data.csrfmiddlewaretoken
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            mostrarExito('Solicitud de documento registrada exitosamente');
+            form.reset();
+            $('#modalDocumentos').modal('hide');
+        } else {
+            mostrarError(result.message);
+        }
+    } catch (error) {
+        mostrarError('Error de conexión: ' + error);
+    }
+}
+
+// Función para solicitar credencial
+async function solicitarCredencial() {
+    const form = document.getElementById('formCredenciales');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    
+    // Validación básica
+    if (!data.alumno || !data.tipo_tramite) {
+        mostrarError('Alumno y tipo de trámite son requeridos');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/tramites/credenciales/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': data.csrfmiddlewaretoken
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            mostrarExito('Solicitud de credencial registrada exitosamente');
+            form.reset();
+            $('#modalCredenciales').modal('hide');
+        } else {
+            mostrarError(result.message);
+        }
+    } catch (error) {
+        mostrarError('Error de conexión: ' + error);
+    }
+}
+
+// Función para registrar en evento de semana académica
+async function registrarEvento() {
+    const form = document.getElementById('formSemanaAcademica');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    
+    // Validación básica
+    if (!data.alumno || !data.evento) {
+        mostrarError('Alumno y evento son requeridos');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/tramites/semana-academica/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': data.csrfmiddlewaretoken
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            mostrarExito('Registro en evento realizado exitosamente');
+            form.reset();
+            $('#modalSemanaAcademica').modal('hide');
+        } else {
+            mostrarError(result.message);
+        }
+    } catch (error) {
+        mostrarError('Error de conexión: ' + error);
+    }
+}
+
+// Funciones de utilidad
+function mostrarExito(mensaje) {
+    // Puedes usar Toast de Bootstrap o alert simple
+    alert('Éxito: ' + mensaje);
+}
+
+function mostrarError(mensaje) {
+    alert('Error: ' + mensaje);
+}
+
+// Inicialización cuando el documento está listo
+document.addEventListener('DOMContentLoaded', function() {
+    cargarAlumnosTramites();
+});
+</script>
+
+{% endblock %}

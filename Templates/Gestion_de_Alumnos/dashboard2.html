@@ -1,0 +1,701 @@
+{% extends 'Gestion_de_Alumnos/base.html' %}
+{% load static %}
+
+{% block content %}
+<style>
+.dashboard-card {
+    transition: transform 0.2s ease, box-shadow 0.2s ease;
+    border-radius: 10px;
+}
+
+.dashboard-card:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 4px 12px rgba(0,0,0,0.15);
+}
+
+.module-icon {
+    color: #28a745;
+}
+
+.dashboard-header {
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+    padding-bottom: 1rem;
+}
+
+.section-title {
+    color: #ffffff;
+    font-weight: 600;
+}
+
+.btn-primary {
+    background-color: #28a745 !important;
+    border-color: #28a745 !important;
+    border-radius: 20px;
+    padding: 0.375rem 1.5rem;
+}
+
+.btn-primary:hover {
+    background-color: #218838 !important;
+    border-color: #218838 !important;
+}
+
+/* Estilos para modales */
+.modal-content {
+    border-radius: 10px;
+    border: none;
+}
+
+.modal-header {
+    background-color: #2a2e3f;
+    color: white;
+    border-bottom: 1px solid rgba(255,255,255,0.1);
+}
+
+.modal-body {
+    background-color: #1a1d29;
+    color: white;
+}
+
+.modal-footer {
+    background-color: #1a1d29;
+    border-top: 1px solid rgba(255,255,255,0.1);
+}
+
+.form-control, .form-select {
+    background-color: #2a2e3f;
+    border: 1px solid rgba(255,255,255,0.1);
+    color: white;
+}
+
+.form-control:focus, .form-select:focus {
+    background-color: #2a2e3f;
+    border-color: #28a745;
+    color: white;
+    box-shadow: 0 0 0 0.2rem rgba(40, 167, 69, 0.25);
+}
+
+.table {
+    background-color: #1a1d29;
+    color: white;
+}
+
+.alert {
+    border-radius: 10px;
+}
+</style>
+
+<main class="dashboard-container">
+    <header class="dashboard-header mb-4">
+        <h1 class="display-5 fw-bold">Sistema de Gestión de Alumnos</h1>
+        <p class="lead">Bienvenido al sistema integral de administración estudiantil del Tecnológico de Chihuahua 2</p>
+    </header>
+    
+    <div class="row g-3">
+        <!-- Inscripción de Alumnos -->
+        <article class="col-md-4 col-sm-6">
+            <div class="card h-100 dashboard-card">
+                <div class="card-body text-center p-3">
+                    <div class="module-icon mb-2">
+                        <i class="bi bi-person-plus fs-3"></i>
+                    </div>
+                    <h5 class="card-title h6">Inscripción de Alumnos</h5>
+                    <p class="card-text small text-muted">Gestión del proceso de inscripción de nuevos alumnos</p>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalInscripcion">
+                        Acceder
+                    </button>
+                </div>
+            </div>
+        </article>
+        
+        <!-- Reinscripción -->
+        <article class="col-md-4 col-sm-6">
+            <div class="card h-100 dashboard-card">
+                <div class="card-body text-center p-3">
+                    <div class="module-icon mb-2">
+                        <i class="bi bi-arrow-repeat fs-3"></i>
+                    </div>
+                    <h5 class="card-title h6">Reinscripción</h5>
+                    <p class="card-text small text-muted">Proceso de reinscripción para alumnos existentes</p>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalReinscripcion">
+                        Acceder
+                    </button>
+                </div>
+            </div>
+        </article>
+        
+        <!-- Expediente de Alumnos -->
+        <article class="col-md-4 col-sm-6">
+            <div class="card h-100 dashboard-card">
+                <div class="card-body text-center p-3">
+                    <div class="module-icon mb-2">
+                        <i class="bi bi-folder2-open fs-3"></i>
+                    </div>
+                    <h5 class="card-title h6">Expediente de Alumnos</h5>
+                    <p class="card-text small text-muted">Consulta y gestión de datos académicos</p>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalExpediente">
+                        Acceder
+                    </button>
+                </div>
+            </div>
+        </article>
+        
+        <!-- Seguimiento de Desempeño -->
+        <article class="col-md-4 col-sm-6">
+            <div class="card h-100 dashboard-card">
+                <div class="card-body text-center p-3">
+                    <div class="module-icon mb-2">
+                        <i class="bi bi-graph-up fs-3"></i>
+                    </div>
+                    <h5 class="card-title h6">Seguimiento de Desempeño</h5>
+                    <p class="card-text small text-muted">Monitoreo del rendimiento académico</p>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalSeguimiento">
+                        Acceder
+                    </button>
+                </div>
+            </div>
+        </article>
+        
+        <!-- Reportes -->
+        <article class="col-md-4 col-sm-6">
+            <div class="card h-100 dashboard-card">
+                <div class="card-body text-center p-3">
+                    <div class="module-icon mb-2">
+                        <i class="bi bi-file-text fs-3"></i>
+                    </div>
+                    <h5 class="card-title h6">Reportes</h5>
+                    <p class="card-text small text-muted">Generación de informes académicos</p>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalReportes">
+                        Acceder
+                    </button>
+                </div>
+            </div>
+        </article>
+        
+        <!-- Historial Académico -->
+        <article class="col-md-4 col-sm-6">
+            <div class="card h-100 dashboard-card">
+                <div class="card-body text-center p-3">
+                    <div class="module-icon mb-2">
+                        <i class="bi bi-journal fs-3"></i>
+                    </div>
+                    <h5 class="card-title h6">Historial Académico</h5>
+                    <p class="card-text small text-muted">Registro completo del trayecto académico</p>
+                    <button class="btn btn-primary btn-sm" data-bs-toggle="modal" data-bs-target="#modalHistorial">
+                        Acceder
+                    </button>
+                </div>
+            </div>
+        </article>
+    </div>
+</main>
+
+<!-- ============================================= -->
+<!-- MODALES PARA CADA OPCIÓN -->
+<!-- ============================================= -->
+
+<!-- Modal Inscripción de Alumnos -->
+<div class="modal fade" id="modalInscripcion" tabindex="-1" aria-labelledby="modalInscripcionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalInscripcionLabel">
+                    <i class="bi bi-person-plus me-2"></i>Inscripción de Nuevos Alumnos
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-info">
+                    <i class="bi bi-info-circle me-2"></i>
+                    Complete el formulario para registrar un nuevo alumno en el sistema.
+                </div>
+                <form id="formInscripcion">
+                    {% csrf_token %}
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Matrícula *</label>
+                            <input type="text" class="form-control" name="matricula" required>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Nombre Completo *</label>
+                            <input type="text" class="form-control" name="nombre" required>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Grupo</label>
+                            <select class="form-select" name="id_grupo" id="selectGrupoInscripcion">
+                                <option value="">Seleccionar grupo...</option>
+                            </select>
+                        </div>
+                        <div class="col-md-6 mb-3">
+                            <label class="form-label">Correo Electrónico</label>
+                            <input type="email" class="form-control" name="email">
+                        </div>
+                    </div>
+                </form>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancelar</button>
+                <button type="button" class="btn btn-primary" onclick="guardarInscripcion()">Guardar Inscripción</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Reinscripción -->
+<div class="modal fade" id="modalReinscripcion" tabindex="-1" aria-labelledby="modalReinscripcionLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalReinscripcionLabel">
+                    <i class="bi bi-arrow-repeat me-2"></i>Proceso de Reinscripción
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="alert alert-warning">
+                    <i class="bi bi-exclamation-triangle me-2"></i>
+                    Proceso de reinscripción para alumnos activos en el sistema.
+                </div>
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Seleccionar Alumno *</label>
+                        <select class="form-select" id="selectAlumnoReinscripcion">
+                            <option value="">Cargando alumnos...</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <label class="form-label">Nuevo Grupo *</label>
+                        <select class="form-select" id="selectNuevoGrupo">
+                            <option value="">Cargando grupos...</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="infoAlumno" class="alert alert-info d-none">
+                    <!-- Información del alumno seleccionado -->
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="procesarReinscripcion()">Procesar Reinscripción</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Expediente de Alumnos -->
+<div class="modal fade" id="modalExpediente" tabindex="-1" aria-labelledby="modalExpedienteLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalExpedienteLabel">
+                    <i class="bi bi-folder2-open me-2"></i>Expediente de Alumnos
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <input type="text" class="form-control" placeholder="Buscar alumno por matrícula o nombre..." id="buscarExpediente">
+                </div>
+                <div class="table-responsive">
+                    <table class="table table-striped table-hover">
+                        <thead>
+                            <tr>
+                                <th>Matrícula</th>
+                                <th>Nombre</th>
+                                <th>Grupo</th>
+                                <th>Acciones</th>
+                            </tr>
+                        </thead>
+                        <tbody id="tablaExpedientes">
+                            <tr>
+                                <td colspan="4" class="text-center">Cargando datos...</td>
+                            </tr>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Seguimiento de Desempeño -->
+<div class="modal fade" id="modalSeguimiento" tabindex="-1" aria-labelledby="modalSeguimientoLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalSeguimientoLabel">
+                    <i class="bi bi-graph-up me-2"></i>Seguimiento de Desempeño Académico
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row mb-3">
+                    <div class="col-md-6">
+                        <label class="form-label">Seleccionar Grupo</label>
+                        <select class="form-select" id="grupoSeguimiento">
+                            <option value="">Todos los grupos</option>
+                        </select>
+                    </div>
+                    <div class="col-md-6">
+                        <label class="form-label">Periodo</label>
+                        <select class="form-select" id="periodoSeguimiento">
+                            <option value="2025-1">2025-1</option>
+                            <option value="2024-2">2024-2</option>
+                        </select>
+                    </div>
+                </div>
+                <div id="graficaDesempeno" class="text-center p-4">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Seleccione un grupo para ver el análisis de desempeño
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="generarReporteDesempeno()">Generar Reporte</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Reportes -->
+<div class="modal fade" id="modalReportes" tabindex="-1" aria-labelledby="modalReportesLabel" aria-hidden="true">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalReportesLabel">
+                    <i class="bi bi-file-text me-2"></i>Generación de Reportes
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="row">
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-people fs-1 text-primary mb-3"></i>
+                                <h6>Reporte de Alumnos</h6>
+                                <p class="small text-muted">Listado completo de alumnos registrados</p>
+                                <button class="btn btn-outline-primary btn-sm" onclick="generarReporte('alumnos')">Generar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-graph-up fs-1 text-success mb-3"></i>
+                                <h6>Reporte de Calificaciones</h6>
+                                <p class="small text-muted">Calificaciones por periodo</p>
+                                <button class="btn btn-outline-success btn-sm" onclick="generarReporte('calificaciones')">Generar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-calendar-check fs-1 text-warning mb-3"></i>
+                                <h6>Reporte de Asistencias</h6>
+                                <p class="small text-muted">Registro de asistencias</p>
+                                <button class="btn btn-outline-warning btn-sm" onclick="generarReporte('asistencias')">Generar</button>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-md-6 mb-3">
+                        <div class="card h-100">
+                            <div class="card-body text-center">
+                                <i class="bi bi-exclamation-triangle fs-1 text-danger mb-3"></i>
+                                <h6>Reporte General</h6>
+                                <p class="small text-muted">Resumen completo del sistema</p>
+                                <button class="btn btn-outline-danger btn-sm" onclick="generarReporte('general')">Generar</button>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Modal Historial Académico -->
+<div class="modal fade" id="modalHistorial" tabindex="-1" aria-labelledby="modalHistorialLabel" aria-hidden="true">
+    <div class="modal-dialog modal-xl">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modalHistorialLabel">
+                    <i class="bi bi-journal me-2"></i>Historial Académico
+                </h5>
+                <button type="button" class="btn-close btn-close-white" data-bs-dismiss="modal" aria-label="Close"></button>
+            </div>
+            <div class="modal-body">
+                <div class="mb-3">
+                    <label class="form-label">Seleccionar Alumno</label>
+                    <select class="form-select" id="alumnoHistorial">
+                        <option value="">Cargando alumnos...</option>
+                    </select>
+                </div>
+                <div id="detalleHistorial" class="mt-3">
+                    <div class="alert alert-info">
+                        <i class="bi bi-info-circle me-2"></i>
+                        Seleccione un alumno para ver su historial académico completo
+                    </div>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cerrar</button>
+                <button type="button" class="btn btn-primary" onclick="imprimirHistorial()">Imprimir Historial</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script>
+// JavaScript para la interactividad
+const API_BASE = '/api';
+
+// Función para cargar grupos en los selects
+async function cargarGrupos() {
+    try {
+        const response = await fetch(`${API_BASE}/grupos/`);
+        if (!response.ok) throw new Error('Error al cargar grupos');
+        
+        const grupos = await response.json();
+        
+        // Llenar todos los selects de grupos
+        const selects = [
+            'selectGrupoInscripcion',
+            'selectNuevoGrupo', 
+            'grupoSeguimiento'
+        ];
+        
+        selects.forEach(selectId => {
+            const select = document.getElementById(selectId);
+            if (select) {
+                select.innerHTML = '<option value="">Seleccionar grupo...</option>';
+                grupos.forEach(grupo => {
+                    const option = document.createElement('option');
+                    option.value = grupo.id_grupo;
+                    option.textContent = `${grupo.nombre_grupo} - Semestre ${grupo.semestre}`;
+                    select.appendChild(option);
+                });
+            }
+        });
+        
+        return grupos;
+    } catch (error) {
+        console.error('Error cargando grupos:', error);
+        mostrarError('Error al cargar los grupos');
+        return [];
+    }
+}
+
+// Función para cargar alumnos
+async function cargarAlumnos() {
+    try {
+        const response = await fetch(`${API_BASE}/alumnos/`);
+        if (!response.ok) throw new Error('Error al cargar alumnos');
+        
+        const alumnos = await response.json();
+        
+        // Llenar selects de alumnos
+        const selects = ['selectAlumnoReinscripcion', 'alumnoHistorial'];
+        
+        selects.forEach(selectId => {
+            const select = document.getElementById(selectId);
+            if (select) {
+                select.innerHTML = '<option value="">Seleccionar alumno...</option>';
+                alumnos.forEach(alumno => {
+                    const option = document.createElement('option');
+                    option.value = alumno.id_alumno;
+                    option.textContent = `${alumno.nombre} - ${alumno.numero_control}`;
+                    select.appendChild(option);
+                });
+            }
+        });
+        
+        // Llenar tabla de expedientes
+        llenarTablaExpedientes(alumnos);
+        
+        return alumnos;
+    } catch (error) {
+        console.error('Error cargando alumnos:', error);
+        mostrarError('Error al cargar los alumnos');
+        return [];
+    }
+}
+
+// Función para llenar tabla de expedientes
+function llenarTablaExpedientes(alumnos) {
+    const tbody = document.getElementById('tablaExpedientes');
+    if (!tbody) return;
+    
+    if (alumnos.length === 0) {
+        tbody.innerHTML = '<tr><td colspan="4" class="text-center">No hay alumnos registrados</td></tr>';
+        return;
+    }
+    
+    tbody.innerHTML = '';
+    alumnos.forEach(alumno => {
+        const tr = document.createElement('tr');
+        tr.innerHTML = `
+            <td>${alumno.numero_control || 'N/A'}</td>
+            <td>${alumno.nombre}</td>
+            <td>${alumno.grupo_nombre}</td>
+            <td>
+                <button class="btn btn-sm btn-outline-primary" onclick="verExpediente(${alumno.id_alumno})">
+                    <i class="bi bi-eye"></i> Ver
+                </button>
+            </td>
+        `;
+        tbody.appendChild(tr);
+    });
+}
+
+// Función para guardar inscripción
+async function guardarInscripcion() {
+    const form = document.getElementById('formInscripcion');
+    const formData = new FormData(form);
+    const data = Object.fromEntries(formData);
+    
+    // Validación básica
+    if (!data.matricula || !data.nombre) {
+        mostrarError('Matrícula y nombre son requeridos');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/inscripcion/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+                'X-CSRFToken': data.csrfmiddlewaretoken
+            },
+            body: JSON.stringify(data)
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            mostrarExito('Alumno inscrito exitosamente');
+            form.reset();
+            $('#modalInscripcion').modal('hide');
+            // Recargar lista de alumnos
+            await cargarAlumnos();
+        } else {
+            mostrarError(result.message);
+        }
+    } catch (error) {
+        mostrarError('Error de conexión: ' + error);
+    }
+}
+
+// Función para procesar reinscripción
+async function procesarReinscripcion() {
+    const alumnoId = document.getElementById('selectAlumnoReinscripcion').value;
+    const nuevoGrupo = document.getElementById('selectNuevoGrupo').value;
+    
+    if (!alumnoId || !nuevoGrupo) {
+        mostrarError('Seleccione un alumno y un grupo');
+        return;
+    }
+    
+    try {
+        const response = await fetch(`${API_BASE}/reinscripcion/`, {
+            method: 'POST',
+            headers: {
+                'Content-Type': 'application/json',
+            },
+            body: JSON.stringify({
+                alumno_id: alumnoId,
+                nuevo_grupo: nuevoGrupo
+            })
+        });
+        
+        const result = await response.json();
+        if (result.success) {
+            mostrarExito('Reinscripción procesada exitosamente');
+            $('#modalReinscripcion').modal('hide');
+            await cargarAlumnos();
+        } else {
+            mostrarError(result.message);
+        }
+    } catch (error) {
+        mostrarError('Error de conexión: ' + error);
+    }
+}
+
+// Función para generar reportes
+async function generarReporte(tipo) {
+    try {
+        const response = await fetch(`${API_BASE}/reportes/${tipo}/`);
+        if (!response.ok) throw new Error('Error al generar reporte');
+        
+        const data = await response.json();
+        console.log(`Reporte de ${tipo}:`, data);
+        mostrarExito(`Reporte de ${tipo} generado exitosamente. Ver consola para detalles.`);
+        
+    } catch (error) {
+        mostrarError('Error generando reporte: ' + error);
+    }
+}
+
+// Función para ver expediente
+async function verExpediente(alumnoId) {
+    try {
+        const response = await fetch(`${API_BASE}/expediente/${alumnoId}/`);
+        if (!response.ok) throw new Error('Error al cargar expediente');
+        
+        const expediente = await response.json();
+        
+        // Mostrar información en un alert (puedes mejorarlo)
+        alert(`Expediente de: ${expediente.alumno.nombre}\nMatrícula: ${expediente.alumno.matricula}\nGrupo: ${expediente.alumno.grupo}`);
+        
+    } catch (error) {
+        mostrarError('Error cargando expediente: ' + error);
+    }
+}
+
+// Funciones de utilidad
+function mostrarExito(mensaje) {
+    // Puedes usar Toast de Bootstrap o alert simple
+    alert('Éxito: ' + mensaje);
+}
+
+function mostrarError(mensaje) {
+    alert('Error: ' + mensaje);
+}
+
+// Inicialización cuando el documento está listo
+document.addEventListener('DOMContentLoaded', function() {
+    cargarGrupos();
+    cargarAlumnos();
+});
+
+// Búsqueda en tiempo real para expedientes
+document.getElementById('buscarExpediente')?.addEventListener('input', function(e) {
+    const termino = e.target.value.toLowerCase();
+    const filas = document.querySelectorAll('#tablaExpedientes tr');
+    
+    filas.forEach(fila => {
+        const texto = fila.textContent.toLowerCase();
+        fila.style.display = texto.includes(termino) ? '' : 'none';
+    });
+});
+
+// Funciones placeholder para futura implementación
+function generarReporteDesempeno() {
+    mostrarExito('Función de reporte de desempeño en desarrollo');
+}
+
+function imprimirHistorial() {
+    mostrarExito('Función de impresión en desarrollo');
+}
+</script>
+
+{% endblock %}
