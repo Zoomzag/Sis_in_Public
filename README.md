@@ -11,59 +11,43 @@
 
 # Sistema Integral Institucional
 
-Sistema integral institucional inspirado en el antiguo SII del **Instituto Tecnológico de Chihuahua Campus II**, cuyas funcionalidades resultaban de gran utilidad para el personal administrativo, el personal docente y el alumnado.
+Es un sistema inspirado en el antiguo SII que usaba el Instituto Tecnológico de Chihuahua Campus II. La idea es tener en un solo lugar las cosas que necesitan el personal administrativo, los docentes y los alumnos.
 
-> **Estado del proyecto:** en desarrollo. Esta versión corresponde a la migración del proyecto original, construido con **Django (Python)**, hacia **Spring Boot (Java)**. Además de replicar las capacidades del sistema anterior, incorpora nuevas funcionalidades y plantea nuevos retos técnicos y soluciones.
+Está hecho con **Python** y **Django**, y usa **MySQL** como base de datos. Todavía no está terminado.
 
-## Tecnologías
+## ¿Qué hace?
 
-El proyecto está desarrollado en **Java 21** con **Spring Boot 3.2.x**, e integra las siguientes dependencias:
+- **Inicio de sesión:** entras con tu usuario y, según el tipo de usuario, te manda a una pantalla u otra.
+- **Administración académica:** ver las carreras, los horarios, las evaluaciones y la asistencia, con alertas cuando un alumno tiene baja calificación o muchas faltas.
+- **Gestión de alumnos:** inscribir y reinscribir alumnos, ver su expediente (calificaciones y asistencias) y sacar reportes.
+- **Gestión de docentes:** asignar materias y grupos a los docentes y evaluar su desempeño.
+- **Control financiero:** becas, pagos y estados de cuenta.
+- **Biblioteca:** catálogo de libros y materiales, préstamos y devoluciones.
+- **Extras:** trámites, evaluación docente y actividades extra.
 
-| Dependencia | Propósito |
-|---|---|
-| Spring Web | Capa web y controladores |
-| Spring Data JPA | Persistencia y acceso a datos |
-| Spring Security | Autenticación y autorización |
-| MySQL Driver | Conexión con la base de datos |
-| Flyway Migration | Control de versiones del esquema de base de datos |
-| Lombok | Reducción de código repetitivo |
-| Spring Boot DevTools | Agilización del desarrollo |
-| Thymeleaf | Motor de plantillas para las vistas |
+## ¿Cómo está organizado?
 
-## Módulos del sistema
+- `Sis_In/` → la configuración del proyecto.
+- `Sis_inApp/` → el código principal: `models.py` (tablas), `views.py` (lo que hace cada pantalla) y `urls.py` (las direcciones).
+- `Templates/` → las páginas HTML.
+- `Static/` → CSS, JavaScript e imágenes.
 
-| Módulo | Funcionalidades |
-|---|---|
-| Autenticación y seguridad | Inicio y cierre de sesión, redirección según tipo de usuario, control de permisos |
-| Administración académica | Panel general, gestión de planes de estudio (carreras), control de horarios, evaluaciones y control de asistencia, con alertas por baja calificación e inasistencias |
-| Gestión de alumnos | Inscripción, reinscripción, expediente (calificaciones y asistencias) y generación de reportes |
-| Gestión de docentes | Asignación de materias y grupos, horarios y evaluación del desempeño docente |
-| Control administrativo y financiero | Becas, pagos, conceptos de pago y estados de cuenta |
-| Biblioteca | Catálogo de materiales, préstamos, devoluciones, reservaciones y recursos digitales |
-| Extras | Trámites, evaluación docente y actividades extraescolares |
-| Comunicación | Avisos, mensajes y calendario de eventos |
-| Indicadores y reportes | Indicadores institucionales y reportes estadísticos |
+## ¿Cómo lo corro?
 
-## Base de datos
+1. Instala las librerías:
 
-El sistema utiliza **MySQL** como gestor de base de datos, diseñada para almacenar la información de los distintos módulos institucionales. Las principales entidades son:
+   ```bash
+   pip install django mysqlclient
+   ```
 
-- **Académico:** carreras, asignaturas, grupos, alumnos, docentes, horarios, calificaciones, asistencias, cargas docentes, disponibilidad de docentes y evaluaciones docentes.
-- **Financiero:** becas, conceptos de pago, estados de cuenta y pagos.
-- **Biblioteca:** materiales, préstamos y reservaciones.
-- **Comunicación:** avisos, mensajes y eventos de calendario.
-- **Seguimiento:** alertas, indicadores, datos de indicadores y reportes estadísticos.
-- **Usuarios y documentos:** usuarios y documentos de alumnos.
+2. Crea la base de datos `sis_in` en MySQL con sus tablas. Django no las crea solo, tienen que existir antes.
 
-## Migración desde el proyecto original
+3. Pon tu usuario y contraseña de MySQL en `Sis_In/settings.py`, en la parte de `DATABASES`.
 
-El proyecto original utilizaba Django 5.2 con MySQL. A continuación se muestra la equivalencia entre sus componentes y los de esta versión:
+4. Inicia el servidor:
 
-| Django (original) | Spring Boot (esta versión) |
-|---|---|
-| `models.py` | Entidades JPA (`@Entity`) y migraciones de Flyway |
-| `views.py` | Controladores (`@Controller` / `@RestController`) y servicios |
-| `urls.py` | Mapeos de rutas (`@RequestMapping`, `@GetMapping`, `@PostMapping`) |
-| Plantillas de Django | Plantillas de Thymeleaf |
-| `django.contrib.auth` | Spring Security |
-| `settings.py` | `application.properties` / `application.yml` |
+   ```bash
+   python manage.py runserver
+   ```
+
+5. Abre `http://127.0.0.1:8000/` en el navegador.
