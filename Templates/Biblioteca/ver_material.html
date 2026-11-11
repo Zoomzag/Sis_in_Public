@@ -1,0 +1,34 @@
+{% extends "Biblioteca/base.html" %}
+
+{% block title %}{{ material.titulo }} · Biblioteca{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <a class="small text-decoration-none" href="{% url 'biblioteca' %}">
+        <i class="bi bi-arrow-left me-1" aria-hidden="true"></i> Volver al catálogo
+    </a>
+    <h1 class="mt-3">{{ material.titulo }}</h1>
+    <p>Detalle del material registrado en el catálogo.</p>
+</div>
+
+<section class="card">
+    <div class="card-body p-4">
+        <dl class="row mb-0">
+            <dt class="col-sm-3">Autor</dt>
+            <dd class="col-sm-9">{{ material.autor|default:"No especificado" }}</dd>
+            <dt class="col-sm-3">Tipo</dt>
+            <dd class="col-sm-9">{{ material.tipo_material|default:"No especificado" }}</dd>
+            <dt class="col-sm-3">ISBN</dt>
+            <dd class="col-sm-9">{{ material.isbn|default:"No especificado" }}</dd>
+            <dt class="col-sm-3">Editorial</dt>
+            <dd class="col-sm-9">{{ material.editorial|default:"No especificada" }}</dd>
+            <dt class="col-sm-3">Año</dt>
+            <dd class="col-sm-9">{{ material.año_publicacion|default:"No especificado" }}</dd>
+            <dt class="col-sm-3">Ejemplares disponibles</dt>
+            <dd class="col-sm-9">{{ material.ejemplares_disponibles|default:"0" }}</dd>
+            <dt class="col-sm-3">Ubicación</dt>
+            <dd class="col-sm-9">{{ material.ubicacion|default:"No especificada" }}</dd>
+        </dl>
+    </div>
+</section>
+{% endblock %}

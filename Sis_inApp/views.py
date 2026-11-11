@@ -2,6 +2,7 @@ from django.shortcuts import render, redirect
 from django.contrib.auth import authenticate, login
 from .models import Carreras, Grupos, Alumnos, Docentes, Asignaturas, Horarios, Calificaciones, Asistencias, Alertas
 from django.db.models import Count, Avg, Q
+from django.db import connection
 from django.utils import timezone
 from django.contrib.auth import logout
 from django.contrib import messages
@@ -9,7 +10,16 @@ from django.contrib.auth.models import User
 from django.http import JsonResponse
 import json
 from django.views.decorators.csrf import csrf_exempt
-from .models import Becas, Pagos, EstadosCuenta
+from .models import Becas, Pagos, EstadosCuenta, Usuarios
+
+
+def _missing_model_tables(*model_classes):
+    existing_tables = set(connection.introspection.table_names())
+    return [
+        model._meta.db_table
+        for model in model_classes
+        if model._meta.db_table not in existing_tables
+    ]
 
 def log_in(request):
     if request.method == 'POST':
@@ -35,12 +45,10 @@ def log_in(request):
 def index(request):
     return render(request,'index.html', {})
 
-<<<<<<< HEAD
 def indexA(request):
     return render(request,'indexA.html', {})
-=======
 def Modulo_1(request):
-    return render(request, 'Modulo_1/base.html')
+    return render(request, 'Modulo_1/base.html', {'active_page': 'dashboard'})
 
 def Modulo_2(request):
     return render(request, 'Modulo_2/index.html')
@@ -55,16 +63,35 @@ def Modulo_5(request):
     return render(request, 'Modulo_5/index.html')
 
 def Modulo_6(request):
-    return render(request, 'Modulo_6/index.html')   
+    return redirect('biblioteca')
 
 def Modulo_7(request):
-    return render(request, 'Modulo_7/index.html')   
->>>>>>> e483321197913929d645ccd160a7fbb8850623b2
+    total_alumnos = Alumnos.objects.count()
+    total_grupos = Grupos.objects.count()
+    total_calificaciones = Calificaciones.objects.count()
+    total_asistencias = Asistencias.objects.count()
+    presentes = Asistencias.objects.filter(presente=True).count()
+    promedio = Calificaciones.objects.aggregate(promedio=Avg('calificacion'))['promedio']
+    porcentaje_asistencia = (presentes / total_asistencias * 100) if total_asistencias else 0
+    calificaciones_recientes = Calificaciones.objects.select_related(
+        'id_alumno', 'id_asignatura'
+    ).order_by('-id_calificacion')[:8]
+
+    context = {
+        'total_alumnos': total_alumnos,
+        'total_grupos': total_grupos,
+        'total_calificaciones': total_calificaciones,
+        'total_asistencias': total_asistencias,
+        'porcentaje_asistencia': round(porcentaje_asistencia, 1),
+        'promedio_calificacion': round(float(promedio), 1) if promedio is not None else 0,
+        'calificaciones_recientes': calificaciones_recientes,
+    }
+    return render(request, 'Modulo_7/index.html', context)
 
 #------------------ZONA DE "Administracion_academica"-----------------------------------------------------------------------
 
 def base(request):
-    return render(request, 'Administracion_academica/base.html')
+    return render(request, 'Modulo_1/base.html', {'active_page': 'dashboard'})
 
 def dashboard(request):
    
@@ -90,7 +117,7 @@ def dashboard(request):
         'actividades': actividades,
         'active_page': 'dashboard'
     }
-    return render(request, 'Administracion_academica/dashboard.html', context)
+    return render(request, 'Modulo_1/dashboard.html', context)
 
 def gestion_planes(request):
   
@@ -120,7 +147,7 @@ def gestion_planes(request):
         'planes': planes,
         'active_page': 'gestion'
     }
-    return render(request, 'Administracion_academica/gestion_planes.html', context)
+    return render(request, 'Modulo_1/gestion_planes.html', context)
 
 def control_horarios(request):
    
@@ -141,7 +168,7 @@ def control_horarios(request):
         'horarios': horarios,
         'active_page': 'control'
     }
-    return render(request, 'Administracion_academica/control_horarios.html', context)
+    return render(request, 'Modulo_1/control_horarios.html', context)
 
 def evaluaciones(request):
     
@@ -166,7 +193,7 @@ def evaluaciones(request):
         'calificaciones_recientes': calificaciones_recientes,
         'active_page': 'evaluaciones'
     }
-    return render(request, 'Administracion_academica/evaluaciones.html', context)
+    return render(request, 'Modulo_1/evaluaciones.html', context)
 
 def control_asistencia(request):
     
@@ -198,7 +225,7 @@ def control_asistencia(request):
         'porcentaje_asistencia': round(porcentaje_asistencia, 2),
         'active_page': 'asistencia'
     }
-    return render(request, 'Administracion_academica/control_asistencia.html', context)
+    return render(request, 'Modulo_1/control_asistencia.html', context)
 #------------------ZONA DE "Administracion_academica"-----------------------------------------------------------------------
 #------------------ZONA DE "LOG_OUT"-----------------------------------------------------------------------------------------
 def log_out(request):
@@ -281,25 +308,15 @@ def dashboard2(request):
 # API para obtener alumnos
 def obtener_alumnos(request):
     try:
-        alumnos = Alumnos.objects.all()
+        alumnos = Alumnos.objects.select_related('id_grupo').all()
         alumnos_data = []
         
         for alumno in alumnos:
-            # Obtener información del grupo manualmente
-            grupo_nombre = "Sin grupo"
-            if alumno.id_grupo:
-                try:
-                    grupo = Grupos.objects.get(id_grupo=alumno.id_grupo)
-                    grupo_nombre = grupo.nombre_grupo
-                except Grupos.DoesNotExist:
-                    grupo_nombre = "Grupo no encontrado"
-            
             alumnos_data.append({
                 'id_alumno': alumno.id_alumno,
                 'nombre': alumno.nombre,
-                'numero_control': alumno.numero_control,
-                'grupo_nombre': grupo_nombre,
-                'id_grupo': alumno.id_grupo
+                'grupo_nombre': alumno.id_grupo.nombre_grupo if alumno.id_grupo else 'Sin grupo',
+                'id_grupo': alumno.id_grupo_id
             })
         
         return JsonResponse(alumnos_data, safe=False)
@@ -320,24 +337,30 @@ def inscripcion_alumno(request):
     if request.method == 'POST':
         try:
             data = json.loads(request.body)
-            
-            # Validar campos requeridos
-            if not data.get('nombre') or not data.get('matricula'):
-                return JsonResponse({'success': False, 'message': 'Nombre y matrícula son requeridos'})
-            
-            # Verificar si la matrícula ya existe
-            if Alumnos.objects.filter(numero_control=data.get('matricula')).exists():
-                return JsonResponse({'success': False, 'message': 'La matrícula ya existe'})
-            
-            # Crear nuevo alumno
-            alumno = Alumnos(
-                nombre=data.get('nombre'),
-                numero_control=data.get('matricula'),
-                id_grupo=data.get('id_grupo')
+            nombre = data.get('nombre', '').strip()
+            grupo_id = data.get('id_grupo') or None
+
+            if not nombre:
+                return JsonResponse(
+                    {'success': False, 'message': 'El nombre del alumno es requerido'},
+                    status=400,
+                )
+            if grupo_id and not Grupos.objects.filter(id_grupo=grupo_id).exists():
+                return JsonResponse(
+                    {'success': False, 'message': 'El grupo seleccionado no existe'},
+                    status=400,
+                )
+
+            alumno = Alumnos.objects.create(
+                nombre=nombre,
+                id_grupo_id=grupo_id,
             )
-            alumno.save()
             
-            return JsonResponse({'success': True, 'message': 'Alumno inscrito correctamente', 'id': alumno.id_alumno})
+            return JsonResponse({
+                'success': True,
+                'message': 'Alumno inscrito correctamente',
+                'id': alumno.id_alumno,
+            })
         except Exception as e:
             return JsonResponse({'success': False, 'message': str(e)})
     
@@ -351,10 +374,16 @@ def reinscripcion_alumno(request):
             data = json.loads(request.body)
             alumno_id = data.get('alumno_id')
             nuevo_grupo = data.get('nuevo_grupo')
-            
+
+            if not nuevo_grupo or not Grupos.objects.filter(id_grupo=nuevo_grupo).exists():
+                return JsonResponse(
+                    {'success': False, 'message': 'El grupo seleccionado no existe'},
+                    status=400,
+                )
+
             alumno = Alumnos.objects.get(id_alumno=alumno_id)
-            alumno.id_grupo = nuevo_grupo
-            alumno.save()
+            alumno.id_grupo_id = nuevo_grupo
+            alumno.save(update_fields=['id_grupo'])
             
             return JsonResponse({'success': True, 'message': 'Reinscripción exitosa'})
         except Alumnos.DoesNotExist:
@@ -367,16 +396,8 @@ def reinscripcion_alumno(request):
 # API para expediente de alumnos
 def expediente_alumno(request, alumno_id):
     try:
-        alumno = Alumnos.objects.get(id_alumno=alumno_id)
-        
-        # Obtener información del grupo
-        grupo_nombre = "Sin grupo"
-        if alumno.id_grupo:
-            try:
-                grupo = Grupos.objects.get(id_grupo=alumno.id_grupo)
-                grupo_nombre = grupo.nombre_grupo
-            except Grupos.DoesNotExist:
-                grupo_nombre = "Grupo no encontrado"
+        alumno = Alumnos.objects.select_related('id_grupo').get(id_alumno=alumno_id)
+        grupo_nombre = alumno.id_grupo.nombre_grupo if alumno.id_grupo else 'Sin grupo'
         
         # Obtener calificaciones
         calificaciones = Calificaciones.objects.filter(id_alumno=alumno_id).select_related('id_asignatura')
@@ -403,7 +424,6 @@ def expediente_alumno(request, alumno_id):
             'alumno': {
                 'id': alumno.id_alumno,
                 'nombre': alumno.nombre,
-                'matricula': alumno.numero_control,
                 'grupo': grupo_nombre
             },
             'calificaciones': calificaciones_data,
@@ -421,7 +441,7 @@ def generar_reporte(request, tipo_reporte):
     try:
         if tipo_reporte == 'alumnos':
             data = list(Alumnos.objects.all().values(
-                'nombre', 'numero_control', 'id_grupo'
+                'id_alumno', 'nombre', 'id_grupo'
             )[:50])
         elif tipo_reporte == 'calificaciones':
             data = list(Calificaciones.objects.select_related('id_alumno', 'id_asignatura').values(
@@ -492,9 +512,11 @@ def evaluar_docente(request):
         try:
             EvaluacionesDocentes.objects.create(
                 id_docente_id=request.POST['id_docente'],
-                periodo=request.POST['periodo'],
-                puntaje=request.POST['puntaje'],
-                comentarios=request.POST['comentarios']
+                tipo_evaluacion=request.POST['tipo_evaluacion'],
+                puntuacion=request.POST['puntuacion'],
+                comentarios=request.POST.get('comentarios', ''),
+                fecha_evaluacion=request.POST.get('fecha_evaluacion') or timezone.localdate(),
+                id_evaluador=request.user.pk if request.user.is_authenticated else None,
             )
             messages.success(request, "Evaluación guardada correctamente.")
         except IntegrityError:
@@ -511,11 +533,13 @@ def control_financiero(request):
     """
     # Obtener datos para mostrar en el dashboard
     total_alumnos = Alumnos.objects.count()
-    total_becas = Becas.objects.count()
-    total_pagos = Pagos.objects.count()
-    
-    # Estados de cuenta pendientes
-    estados_pendientes = EstadosCuenta.objects.filter(estatus='Pendiente').count()
+    missing_tables = _missing_model_tables(Becas, Pagos, EstadosCuenta)
+    if missing_tables:
+        total_becas = total_pagos = estados_pendientes = None
+    else:
+        total_becas = Becas.objects.count()
+        total_pagos = Pagos.objects.count()
+        estados_pendientes = EstadosCuenta.objects.filter(estatus='Pendiente').count()
     
     context = {
         'active_page': 'financiero',
@@ -523,6 +547,8 @@ def control_financiero(request):
         'total_becas': total_becas,
         'total_pagos': total_pagos,
         'estados_pendientes': estados_pendientes,
+        'financial_data_available': not missing_tables,
+        'missing_financial_tables': missing_tables,
     }
     return render(request, 'Control_Admi_fina/financieros.html', context)
 #------------------ZONA DE "CONTROL FINANCIERO"-------------------------------------------------------------------------------
@@ -534,67 +560,43 @@ def biblioteca(request):
     """
     Vista para el módulo de biblioteca
     """
-    # Obtener estadísticas
-    materiales_count = MaterialesBiblioteca.objects.count()
-    prestamos_activos = Prestamos.objects.filter(estatus='Activo').count()
-    
-    # Préstamos vencidos (fecha de devolución esperada menor a hoy)
-    prestamos_vencidos = Prestamos.objects.filter(
-        estatus='Activo', 
-        fecha_devolucion_esperada__lt=timezone.now().date()
-    ).count()
-    
-    recursos_digitales = MaterialesBiblioteca.objects.filter(
-        tipo_material__in=['e-Book', 'Video', 'Audio', 'Software']
-    ).count()
-    
-    # Obtener préstamos activos
-    prestamos_activos_list = Prestamos.objects.filter(estatus='Activo').select_related(
-        'id_material', 'id_usuario'
-    )[:10]
-    
-    # Obtener materiales (con filtro si existe)
-    categoria = request.GET.get('categoria', '')
-    if categoria == 'libros':
-        materiales = MaterialesBiblioteca.objects.filter(tipo_material='Libro')[:20]
-    elif categoria == 'revistas':
-        materiales = MaterialesBiblioteca.objects.filter(tipo_material='Revista')[:20]
-    elif categoria == 'tesis':
-        materiales = MaterialesBiblioteca.objects.filter(tipo_material='Tesis')[:20]
-    elif categoria == 'audiovisual':
-        materiales = MaterialesBiblioteca.objects.filter(tipo_material='Video')[:20]
-    elif categoria == 'digitales':
-        materiales = MaterialesBiblioteca.objects.filter(tipo_material__in=['e-Book', 'Software'])[:20]
+    missing_tables = _missing_model_tables(MaterialesBiblioteca, Prestamos, Usuarios)
+    if missing_tables:
+        materiales_count = prestamos_activos = prestamos_vencidos = recursos_digitales = None
+        prestamos_activos_list = materiales = recursos_digitales_list = []
     else:
-        materiales = MaterialesBiblioteca.objects.all()[:20]
-    
-    # Datos de ejemplo para recursos digitales
-    recursos_digitales_list = [
-        {
-            'id': 1,
-            'tipo': 'e-Book',
-            'icono': 'fa-book-open',
-            'titulo': 'Algebra Lineal y sus Aplicaciones',
-            'autor': 'David C. Lay',
-            'descripcion': 'Disponible en PDF y EPUB'
-        },
-        {
-            'id': 2,
-            'tipo': 'Revista',
-            'icono': 'fa-newspaper',
-            'titulo': 'Nature: International Journal of Science',
-            'autor': 'Vol. 615, Issue 7952',
-            'descripcion': 'Artículos de investigación'
-        },
-        {
-            'id': 3,
-            'tipo': 'Video',
-            'icono': 'fa-video',
-            'titulo': 'Programación Orientada a Objetos',
-            'autor': 'Curso completo',
-            'descripcion': '12 horas de contenido'
-        },
-    ]
+        materiales_count = MaterialesBiblioteca.objects.count()
+        prestamos_activos = Prestamos.objects.filter(estatus='Activo').count()
+        prestamos_vencidos = Prestamos.objects.filter(
+            estatus='Activo',
+            fecha_devolucion_esperada__lt=timezone.localdate(),
+        ).count()
+        recursos_digitales = MaterialesBiblioteca.objects.filter(
+            tipo_material__in=['e-Book', 'Video', 'Audio', 'Software']
+        ).count()
+        prestamos_activos_list = Prestamos.objects.filter(estatus='Activo').select_related(
+            'id_material', 'id_usuario'
+        )[:10]
+
+        categoria = request.GET.get('categoria', '')
+        if categoria == 'libros':
+            materiales = MaterialesBiblioteca.objects.filter(tipo_material='Libro')[:20]
+        elif categoria == 'revistas':
+            materiales = MaterialesBiblioteca.objects.filter(tipo_material='Revista')[:20]
+        elif categoria == 'tesis':
+            materiales = MaterialesBiblioteca.objects.filter(tipo_material='Tesis')[:20]
+        elif categoria == 'audiovisual':
+            materiales = MaterialesBiblioteca.objects.filter(tipo_material='Video')[:20]
+        elif categoria == 'digitales':
+            materiales = MaterialesBiblioteca.objects.filter(
+                tipo_material__in=['e-Book', 'Software']
+            )[:20]
+        else:
+            materiales = MaterialesBiblioteca.objects.all()[:20]
+
+        recursos_digitales_list = MaterialesBiblioteca.objects.filter(
+            tipo_material__in=['e-Book', 'Video', 'Audio', 'Software']
+        )[:9]
     
     context = {
         'active_page': 'biblioteca',
@@ -605,7 +607,9 @@ def biblioteca(request):
         'prestamos_activos_list': prestamos_activos_list,
         'materiales': materiales,
         'recursos_digitales_list': recursos_digitales_list,
-        'now': timezone.now().date()
+        'now': timezone.localdate(),
+        'library_data_available': not missing_tables,
+        'missing_library_tables': missing_tables,
     }
     return render(request, 'Biblioteca/biblioteca.html', context)
 
@@ -615,16 +619,7 @@ def registrar_prestamo(request):
     Vista para registrar un nuevo préstamo
     """
     if request.method == 'POST':
-        try:
-            # Aquí implementarías la lógica para registrar el préstamo
-            usuario_id = request.POST.get('usuario')
-            material_id = request.POST.get('material')
-            fecha_devolucion = request.POST.get('fecha_devolucion')
-            
-            # Lógica de registro (ejemplo)
-            messages.success(request, "Préstamo registrado correctamente")
-        except Exception as e:
-            messages.error(request, f"Error al registrar préstamo: {str(e)}")
+        messages.error(request, "El registro de préstamos no está habilitado en este sistema.")
     
     return redirect('biblioteca')
 
@@ -634,14 +629,7 @@ def registrar_devolucion(request):
     Vista para registrar una devolución
     """
     if request.method == 'POST':
-        try:
-            prestamo_id = request.POST.get('prestamo_id')
-            observaciones = request.POST.get('observaciones')
-            
-            # Lógica para registrar devolución
-            messages.success(request, "Devolución registrada correctamente")
-        except Exception as e:
-            messages.error(request, f"Error al registrar devolución: {str(e)}")
+        messages.error(request, "El registro de devoluciones no está habilitado en este sistema.")
     
     return redirect('biblioteca')
 
@@ -650,6 +638,10 @@ def ver_material(request, material_id):
     """
     Vista para ver detalles de un material
     """
+    if _missing_model_tables(MaterialesBiblioteca):
+        messages.error(request, "El catálogo de biblioteca no está configurado.")
+        return redirect('biblioteca')
+
     try:
         material = MaterialesBiblioteca.objects.get(id_material=material_id)
         context = {
@@ -666,12 +658,15 @@ def editar_material(request, material_id):
     """
     Vista para editar un material
     """
+    if _missing_model_tables(MaterialesBiblioteca):
+        messages.error(request, "El catálogo de biblioteca no está configurado.")
+        return redirect('biblioteca')
+
     try:
         material = MaterialesBiblioteca.objects.get(id_material=material_id)
         
         if request.method == 'POST':
-            # Lógica para actualizar el material
-            messages.success(request, "Material actualizado correctamente")
+            messages.error(request, "La edición de materiales todavía no está habilitada.")
             return redirect('biblioteca')
         
         context = {
@@ -688,8 +683,7 @@ def acceder_recurso(request, recurso_id):
     """
     Vista para acceder a un recurso digital
     """
-    # Lógica para acceder al recurso
-    messages.info(request, f"Accediendo al recurso {recurso_id}")
+    messages.error(request, "El acceso a recursos digitales no está configurado.")
     return redirect('biblioteca')
 #------------------ZONA DE "BIBLIOTECA"-------------------------------------------------------------------------------
 #------------------ZONA DE "EXTRAS"-------------------------------------------------------------------------------

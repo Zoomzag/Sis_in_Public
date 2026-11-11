@@ -1,0 +1,62 @@
+{% load static %}
+<!DOCTYPE html>
+<html lang="es">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <title>{% block title %}TECNM Campus Chihuahua II{% endblock %}</title>
+    <link rel="icon" type="image/png" href="{% static 'images/LOGO TEC2 RED.png' %}">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-sRIl4kxILFvY47J16cr9ZwB07vP4J8+LH7qKQnuqkuIAvNWLzeN8tE5YBujZqJLB" crossorigin="anonymous">
+    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+    <link rel="stylesheet" href="{% static 'css/app.css' %}">
+    {% block extra_css %}{% endblock %}
+</head>
+
+<body>
+    <header class="site-header">
+        <div class="container-fluid site-header-inner">
+            <a class="site-brand" href="{% url 'indexA' %}">
+                <img src="{% static 'images/LOGO TEC2 RED.png' %}" alt="" class="site-brand-mark">
+                <span>
+                    <strong>TecNM</strong>
+                    <small>Campus Chihuahua II</small>
+                </span>
+            </a>
+            <div class="site-account">
+                {% if user.is_authenticated %}
+                    <span class="site-user"><i class="bi bi-person-circle" aria-hidden="true"></i> {{ user.get_username }}</span>
+                    <a class="site-account-link" href="{% url 'logout' %}">Cerrar sesión</a>
+                {% else %}
+                    <a class="site-account-link" href="{% url 'log_in' %}">Iniciar sesión</a>
+                {% endif %}
+            </div>
+        </div>
+        {% block navigation %}{% endblock %}
+    </header>
+
+    {% if messages %}
+    <div class="container pt-3" aria-live="polite">
+        {% for message in messages %}
+        <div class="alert alert-{% if 'error' in message.tags %}danger{% else %}{{ message.tags|default:'info' }}{% endif %} alert-dismissible fade show" role="alert">
+            {{ message }}
+            <button type="button" class="btn-close" data-bs-dismiss="alert" aria-label="Cerrar"></button>
+        </div>
+        {% endfor %}
+    </div>
+    {% endif %}
+
+    <main class="site-main">
+        {% block content %}{% endblock %}
+    </main>
+
+    <footer class="site-footer">
+        <div class="container">Tecnológico Nacional de México · Campus Chihuahua II</div>
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+    {% block extra_js %}{% endblock %}
+</body>
+
+</html>

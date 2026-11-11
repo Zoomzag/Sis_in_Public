@@ -1,4 +1,4 @@
-{% extends "Administracion_academica/base.html" %}
+{% extends "Modulo_1/base.html" %}
 {% load static %}
 
 {% block content %}
@@ -52,13 +52,13 @@
                 <div class="card-body">
                     <div class="list-group">
                         {% for grupo in grupos %}
-                        <a href="#" class="list-group-item list-group-item-action">
+                        <div class="list-group-item">
                             <div class="d-flex w-100 justify-content-between">
                                 <h6 class="mb-1">{{ grupo.nombre_grupo }}</h6>
                                 <span class="badge bg-primary">{{ grupo.id_carrera.nombre }}</span>
                             </div>
                             <p class="mb-1">{{ grupo.semestre }}° Semestre</p>
-                        </a>
+                        </div>
                         {% empty %}
                         <div class="list-group-item">
                             No hay grupos registrados.
@@ -77,13 +77,13 @@
                 <div class="card-body">
                     <div class="list-group">
                         {% for docente in docentes %}
-                        <a href="#" class="list-group-item list-group-item-action">
+                        <div class="list-group-item">
                             <div class="d-flex w-100 justify-content-between">
                                 <h6 class="mb-1">{{ docente.nombre }}</h6>
                                 <span class="badge bg-info">{{ docente.num_asignaturas }} asignatura(s)</span>
                             </div>
                             <p class="mb-1">Disponibilidad: {{ docente.disponibilidad|truncatewords:5 }}</p>
-                        </a>
+                        </div>
                         {% empty %}
                         <div class="list-group-item">
                             No hay docentes registrados.

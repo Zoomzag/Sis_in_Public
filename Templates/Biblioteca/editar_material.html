@@ -1,0 +1,20 @@
+{% extends "Biblioteca/base.html" %}
+
+{% block title %}Edición no disponible · Biblioteca{% endblock %}
+
+{% block content %}
+<div class="page-heading">
+    <a class="small text-decoration-none" href="{% url 'biblioteca' %}">
+        <i class="bi bi-arrow-left me-1" aria-hidden="true"></i> Volver al catálogo
+    </a>
+    <h1 class="mt-3">Edición de materiales</h1>
+    <p>{{ material.titulo }}</p>
+</div>
+
+<section class="card">
+    <div class="card-body d-flex align-items-start gap-3 p-4">
+        <i class="bi bi-info-circle fs-4 text-primary" aria-hidden="true"></i>
+        <p class="mb-0">La edición de materiales todavía no está habilitada en el sistema.</p>
+    </div>
+</section>
+{% endblock %}

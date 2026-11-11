@@ -1,0 +1,10 @@
+version: '3.8'
+services:
+  web:
+    image: python:3.13-slim
+    volumes:
+      - .:/code          # Sincroniza tu carpeta actual con /code en el contenedor
+    working_dir: /code
+    command: python manage.py runserver 0.0.0.0:8000
+    ports:
+      - "8000:8000"      # Mapea el puerto para que lo veas en tu navegador

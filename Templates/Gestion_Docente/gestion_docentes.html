@@ -1,4 +1,4 @@
-{% extends 'Administracion_academica/base.html' %}
+{% extends 'Modulo_1/base.html' %}
 {% load static %}
 
 {% block content %}
@@ -16,7 +16,7 @@
                 <div class="row">
                     <div class="col-md-4">
                         <label>Docente</label>
-                        <select name="id_docente" class="form-select">
+                        <select name="id_docente" class="form-select" required>
                             {% for d in docentes %}
                             <option value="{{ d.id_docente }}">{{ d.nombre }}</option>
                             {% endfor %}
@@ -24,7 +24,7 @@
                     </div>
                     <div class="col-md-4">
                         <label>Asignatura</label>
-                        <select name="id_asignatura" class="form-select">
+                        <select name="id_asignatura" class="form-select" required>
                             {% for a in asignaturas %}
                             <option value="{{ a.id_asignatura }}">{{ a.nombre }}</option>
                             {% endfor %}
@@ -32,7 +32,7 @@
                     </div>
                     <div class="col-md-4">
                         <label>Grupo</label>
-                        <select name="id_grupo" class="form-select">
+                        <select name="id_grupo" class="form-select" required>
                             {% for g in grupos %}
                             <option value="{{ g.id_grupo }}">{{ g.nombre_grupo }}</option>
                             {% endfor %}
@@ -63,9 +63,9 @@
                 <tbody>
                     {% for h in horarios %}
                     <tr>
-                        <td>{{ h.docente.nombre }}</td>
-                        <td>{{ h.asignatura.nombre }}</td>
-                        <td>{{ h.grupo.nombre_grupo }}</td>
+                        <td>{{ h.id_docente.nombre }}</td>
+                        <td>{{ h.id_asignatura.nombre }}</td>
+                        <td>{{ h.id_grupo.nombre_grupo }}</td>
                         <td>{{ h.dia_semana }}</td>
                         <td>{{ h.hora_inicio }} - {{ h.hora_fin }}</td>
                     </tr>
@@ -86,20 +86,24 @@
                 <div class="row">
                     <div class="col-md-4">
                         <label>Docente</label>
-                        <select name="id_docente" class="form-select">
+                        <select name="id_docente" class="form-select" required>
                             {% for d in docentes %}
                             <option value="{{ d.id_docente }}">{{ d.nombre }}</option>
                             {% endfor %}
                         </select>
                     </div>
                     <div class="col-md-4">
-                        <label>Puntaje (0-100)</label>
-                        <input type="number" name="puntaje" class="form-control" min="0" max="100" required>
+                        <label>Evaluación (0-99.9)</label>
+                        <input type="number" name="puntuacion" class="form-control" min="0" max="99.9" step="0.1" required>
                     </div>
                     <div class="col-md-4">
-                        <label>Periodo</label>
-                        <input type="text" name="periodo" class="form-control" placeholder="2025-1" required>
+                        <label>Tipo de evaluación</label>
+                        <input type="text" name="tipo_evaluacion" class="form-control" placeholder="Semestral" required>
                     </div>
+                </div>
+                <div class="mt-3">
+                    <label>Fecha de evaluación</label>
+                    <input type="date" name="fecha_evaluacion" class="form-control">
                 </div>
                 <div class="mt-3">
                     <label>Comentarios</label>

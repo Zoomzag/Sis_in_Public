@@ -9,23 +9,23 @@ class Alertas(models.Model):
     tipo = models.CharField(max_length=17, blank=True, null=True)
     mensaje = models.TextField(blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
-    leida = models.IntegerField(blank=True, null=True)
+    leida = models.BooleanField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'alertas'
+        db_table = 'Alertas'
 
 
 class Alumnos(models.Model):
     id_alumno = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
-    numero_control = models.CharField(max_length=20, blank=True, null=True)
-    id_grupo = models.IntegerField(blank=True, null=True, db_column='id_grupo')  # Corregido a id_grupo
-    user_id = models.IntegerField(blank=True, null=True, db_column='user_id')
+    id_grupo = models.ForeignKey(
+        'Grupos', models.DO_NOTHING, db_column='id_grupo', blank=True, null=True
+    )
 
     class Meta:
         managed = False
-        db_table = 'alumnos'
+        db_table = 'Alumnos'
 
 
 class Asignaturas(models.Model):
@@ -37,7 +37,7 @@ class Asignaturas(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'asignaturas'
+        db_table = 'Asignaturas'
 
 
 class Asistencias(models.Model):
@@ -45,12 +45,12 @@ class Asistencias(models.Model):
     id_alumno = models.ForeignKey(Alumnos, models.DO_NOTHING, db_column='id_alumno', blank=True, null=True)
     id_horario = models.ForeignKey('Horarios', models.DO_NOTHING, db_column='id_horario', blank=True, null=True)
     fecha = models.DateField(blank=True, null=True)
-    presente = models.IntegerField(blank=True, null=True)
+    presente = models.BooleanField(blank=True, null=True)
     justificante = models.TextField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'asistencias'
+        db_table = 'Asistencias'
 
 
 class Calificaciones(models.Model):
@@ -63,43 +63,41 @@ class Calificaciones(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'calificaciones'
+        db_table = 'Calificaciones'
 
 
 class Carreras(models.Model):
     id_carrera = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
     perfil_egreso = models.TextField(blank=True, null=True)
-    plan_estudios_documento = models.TextField(blank=True, null=True)
-    mapa_curricular = models.TextField(blank=True, null=True)
-    vigente = models.IntegerField(blank=True, null=True)
+    plan_estudios_documento = models.BinaryField(blank=True, null=True)
+    mapa_curricular = models.BinaryField(blank=True, null=True)
+    vigente = models.BooleanField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'carreras'
+        db_table = 'Carreras'
 
 
 class Docentes(models.Model):
     id_docente = models.AutoField(primary_key=True)
     nombre = models.CharField(max_length=255)
-    numero_trabajador = models.CharField(max_length=20, blank=True, null=True)
     disponibilidad = models.TextField(blank=True, null=True)
-    user_id = models.IntegerField(blank=True, null=True, db_column='user_id')
     
     class Meta:
         managed = False
-        db_table = 'docentes'
+        db_table = 'Docentes'
 
 
 class Grupos(models.Model):
-    id_grupo = models.AutoField(primary_key=True, db_column='id_grupo')  # Corregido a id_grupo
+    id_grupo = models.AutoField(primary_key=True)
     id_carrera = models.ForeignKey(Carreras, models.DO_NOTHING, db_column='id_carrera', blank=True, null=True)
-    nombre_grupo = models.CharField(max_length=50, blank=True, null=True, db_column='nombre_grupo')  # Corregido a nombre_grupo
+    nombre_grupo = models.CharField(max_length=50, blank=True, null=True)
     semestre = models.IntegerField(blank=True, null=True)
 
     class Meta:
         managed = False
-        db_table = 'grupos'
+        db_table = 'Grupos'
 
 
 class Horarios(models.Model):
@@ -113,7 +111,7 @@ class Horarios(models.Model):
 
     class Meta:
         managed = False
-        db_table = 'horarios'
+        db_table = 'Horarios'
 #------------------ZONA DE "Administracion_academica"-----------------------------------------------------------------------
 # ...existing code...
 class AsistenciasDocentes(models.Model):
